@@ -1,0 +1,21 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.2</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\CoyoteNETCore.DAL\CoyoteNETCore.DAL.csproj" />
+    <ProjectReference Include="..\CoyoteNETCore.Shared\CoyoteNETCore.Shared.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Thread\Query\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="FluentValidation.AspNetCore" Version="8.2.0" />
+    <PackageReference Include="MediatR" Version="6.0.0" />
+  </ItemGroup>
+
+</Project>

@@ -1,7 +1,10 @@
-﻿using CoyoteNETCore.DAL;
-using CoyoteNETCore.Services;
+﻿using CoyoteNETCore.Application.Thread.Command;
+using CoyoteNETCore.DAL;
+using CoyoteNETCore.Shared;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
+using System.Threading.Tasks;
 
 namespace CoyoteNETCore.Controllers
 {
@@ -9,21 +12,18 @@ namespace CoyoteNETCore.Controllers
     [ApiController]
     public class HomeController : DefaultController
     {
-        private readonly TestService _service;
-        private readonly Context _db;
-
-        public HomeController(Context db, TestService service)
+        public HomeController(IMediator m) : base(m)
         {
-            _db = db;
-            _service = service;
         }
 
-        [HttpPost("SampleEndpoint")]
-        [ProducesResponseType((int)HttpStatusCode.OK)]
-        public IActionResult SampleEndpoint()
+        [HttpGet("SampleEndpoint")]
+        public async Task<IActionResult> SampleEndpoint()
         {
-            _service.Test();
-            return Ok();
+            // tests
+            var command = new CreateThreadCommand("Test", "test", new User());
+
+            var output = await _med.Send(command);
+            return StatusCode(200, new { output.Success, output.Result });
         }
     }
 }

@@ -6,13 +6,11 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using CoyoteNETCore.Controllers;
-using CoyoteNETCore.Services;
 using CoyoteNETCore.DAL;
 using Swashbuckle.AspNetCore.Swagger;
-using System.Reflection;
-using System;
-using System.IO;
 using Swashbuckle.AspNetCore.SwaggerUI;
+using MediatR;
+using CoyoteNETCore.Application.Thread.Command;
 
 namespace Coyote.NETCore
 {
@@ -28,10 +26,9 @@ namespace Coyote.NETCore
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDbContext<Context>(options =>
-                options.UseSqlServer(Configuration.GetConnectionString("Default")),
-                ServiceLifetime.Transient);
+                options.UseInMemoryDatabase(Configuration.GetConnectionString("Default")), ServiceLifetime.Transient);
 
-            services.AddTransient<TestService>();
+            services.AddMediatR(typeof(CreateThreadCommand).Assembly);
 
             services
                 .AddMvc()
