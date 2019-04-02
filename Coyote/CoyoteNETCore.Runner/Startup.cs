@@ -29,7 +29,7 @@ namespace Coyote.NETCore
                 options.UseInMemoryDatabase(Configuration.GetConnectionString("Default")), ServiceLifetime.Transient);
 
             services.AddMediatR(typeof(CreateThreadCommand).Assembly);
-            // TEST
+
             services
                 .AddMvc()
                 .AddApplicationPart(typeof(HomeController).Assembly)
