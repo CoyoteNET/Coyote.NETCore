@@ -1,9 +1,7 @@
 ﻿using CoyoteNETCore.Application.Thread.Command;
-using CoyoteNETCore.DAL;
 using CoyoteNETCore.Shared;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using System.Net;
 using System.Threading.Tasks;
 
 namespace CoyoteNETCore.Controllers

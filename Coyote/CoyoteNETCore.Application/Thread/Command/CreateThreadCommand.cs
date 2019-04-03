@@ -24,7 +24,7 @@ namespace CoyoteNETCore.Application.Thread.Command
 
         public User Author { get; set; }
 
-        public class Handler : IRequestHandler<CreateThreadCommand, (bool Success, string Result)>
+        private class Handler : IRequestHandler<CreateThreadCommand, (bool Success, string Result)>
         {
             private readonly Context _db;
             public Handler(Context db)

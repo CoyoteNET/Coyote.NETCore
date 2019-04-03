@@ -10,8 +10,8 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\CoyoteNETCore.Application\CoyoteNETCore.Application.csproj" />
     <ProjectReference Include="..\CoyoteNETCore.DAL\CoyoteNETCore.DAL.csproj" />
-    <ProjectReference Include="..\CoyoteNETCore.Services\CoyoteNETCore.Application.csproj" />
   </ItemGroup>
 
 </Project>

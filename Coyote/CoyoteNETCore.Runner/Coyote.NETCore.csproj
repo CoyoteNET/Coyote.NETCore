@@ -17,6 +17,7 @@
 
 
   <ItemGroup>
+    <ProjectReference Include="..\CoyoteNETCore.Application\CoyoteNETCore.Application.csproj" />
     <ProjectReference Include="..\CoyoteNETCore.Controllers\CoyoteNETCore.Controllers.csproj" />
     <ProjectReference Include="..\CoyoteNETCore.Shared\CoyoteNETCore.Shared.csproj" />
   </ItemGroup>
