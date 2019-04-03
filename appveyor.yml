@@ -5,3 +5,4 @@ build_script:
 test_script:
   - cd CoyoteNETCore.Tests
   - dotnet test
+  - echo test
