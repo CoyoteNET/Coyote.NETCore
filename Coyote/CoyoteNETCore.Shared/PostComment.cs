@@ -16,14 +16,14 @@ namespace CoyoteNETCore.Shared
             Author = author;
         }
 
-        public int Id { get; }
+        public int Id { get; private set; }
 
-        public DateTime CreationDate { get;} = DateTime.Now;
+        public DateTime CreationDate { get; private set; } = DateTime.Now;
 
         public string Content { get; set; }
 
-        public Post Post { get; }
+        public Post Post { get; private set; }
 
-        public User Author { get; }
+        public User Author { get; private set; }
     }
 }

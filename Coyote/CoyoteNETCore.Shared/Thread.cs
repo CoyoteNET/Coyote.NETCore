@@ -17,16 +17,17 @@ namespace CoyoteNETCore.Shared
             Title = title;
         }
 
-        public int Id { get; }
+        public int Id { get; private set; }
 
-        public DateTime CreationDate { get; } = DateTime.Now;
+        public DateTime CreationDate { get; private set; } = DateTime.Now;
 
         public ThreadCategory Category { get; set; }
+        public User Author { get; set; }
 
         public string Tags { get; set; }
 
         public string Title { get; set; }
 
-        public ICollection<ThreadEdit> ThreadEdits { get; } = new List<ThreadEdit>();
+        public ICollection<ThreadEdit> ThreadEdits { get; private set; } = new List<ThreadEdit>();
     }
 }

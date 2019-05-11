@@ -15,14 +15,14 @@ namespace CoyoteNETCore.Shared
             Editor = editor;
         }
 
-        public int Id { get; }
+        public int Id { get; private set; }
 
-        public DateTime CreationDate { get; } = DateTime.Now;
+        public DateTime CreationDate { get; private set; } = DateTime.Now;
 
         // shouldn't we track what was previously written in this comment?
 
-        public PostComment Comment { get; }
+        public PostComment Comment { get; private set; }
 
-        public User Editor { get; }
+        public User Editor { get; private set; }
     }
 }

@@ -23,8 +23,8 @@ namespace CoyoteNETCore.Shared
 
         public DateTime CreationDate { get; set; } = DateTime.Now;
 
-        public MicroblogEntry MicroblogEntry { get;}
+        public MicroblogEntry MicroblogEntry { get; private set; }
 
-        public User Author { get; }
+        public User Author { get; private set; }
     }
 }

@@ -1,5 +1,4 @@
 ﻿using System;
-using System.ComponentModel.DataAnnotations;
 
 namespace CoyoteNETCore.Shared
 {
@@ -20,19 +19,18 @@ namespace CoyoteNETCore.Shared
             PlatformInfo = platformInfo;
         }
 
-        [Key]
-        public int Id { get; }
+        public int Id { get; private set; }
 
-        public LoggingType Type { get; }
+        public LoggingType Type { get; private set; }
 
-        public DateTime OccuredAt { get; } = DateTime.Now;
+        public DateTime OccuredAt { get; private set; } = DateTime.Now;
 
-        public User User { get;  }
+        public User User { get; private set; }
 
-        public bool Succeeded { get; }
+        public bool Succeeded { get; private set; }
 
-        public string IPv4 { get;}
+        public string IPv4 { get; private set; }
 
-        public string PlatformInfo { get; }
+        public string PlatformInfo { get; private set; }
     }
 }

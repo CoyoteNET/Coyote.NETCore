@@ -21,8 +21,8 @@ namespace CoyoteNETCore.Shared
 
         // shouldn't we track what was previously written in this post?
 
-        public Thread Thread { get; }
+        public Thread Thread { get; private set; }
 
-        public User Editor { get; }
+        public User Editor { get; private set; }
     }
 }

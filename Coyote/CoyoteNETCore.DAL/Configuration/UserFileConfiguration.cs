@@ -11,6 +11,7 @@ namespace CoyoteNETCore.DAL.Configuration
     {
         public void Configure(EntityTypeBuilder<UserFile> builder)
         {
+
             builder
                 .HasKey(bc => new { bc.UserId, bc.FileId});
 

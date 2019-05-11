@@ -22,17 +22,12 @@ namespace CoyoteNETCore.Shared
 
         public string UserFileName { get; set; }
 
-        public string PhysicalFileName
-        {
-            get { return PhysicalFileName; }
-            set
-            {               
-                 PhysicalFileName = System.IO.File.Exists(Path.Combine("path_from_config", value)) ? value : throw new FileNotFoundException(value);  
-            }
-        }
+        public string PhysicalFileName { get; set; }
 
-        public User UploadedBy { get; }
+        public int UploadedById { get; private set; }
 
-        public ICollection<UserFile> DownloadedBy { get; } = new List<UserFile>();
+        public User UploadedBy { get; private set; }
+
+        public ICollection<UserFile> DownloadedBy { get; private set; } = new List<UserFile>();
     }
 }

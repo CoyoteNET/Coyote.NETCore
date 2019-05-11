@@ -18,16 +18,16 @@ namespace CoyoteNETCore.Shared
             Tags = tags;
         }
 
-        public int Id { get; }
+        public int Id { get; private set; }
 
         public string Content { get; set; }
 
-        public User Author { get; }
+        public User Author { get; private set; }
 
         public string Tags { get; set; }
 
-        public DateTime CreationDate { get; } = DateTime.Now;
+        public DateTime CreationDate { get; private set; } = DateTime.Now;
 
-        public ICollection<MicroblogEdit> Editions /* better wording needed */ { get; } = new List<MicroblogEdit>();
+        public ICollection<MicroblogEdit> Editions /* better wording needed */ { get; private set; } = new List<MicroblogEdit>();
     }
 }

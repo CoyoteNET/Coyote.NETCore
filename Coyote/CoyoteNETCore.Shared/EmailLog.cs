@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Text;
 
 namespace CoyoteNETCore.Shared
 {
@@ -17,18 +19,18 @@ namespace CoyoteNETCore.Shared
             Type = type;
         }
 
-        public int Id { get; }
+        public int Id { get; private set; }
 
-        public string To { get; }
+        public string To { get; private set; }
 
-        public string Message { get; }
+        public string Message { get; private set; }
 
-        public string Topic { get; }
+        public string Topic { get; private set; }
 
-        public DateTime SendingDate { get; } = DateTime.Now;
+        public DateTime SendingDate { get; private set; } = DateTime.Now;
 
         public bool SentSuccessfully { get; set; }
 
-        public EmailMessageType Type { get; }
+        public EmailMessageType Type { get; private set; }
     }
 }

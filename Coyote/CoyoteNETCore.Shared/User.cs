@@ -21,9 +21,9 @@ namespace CoyoteNETCore.Shared
             PasswordSalt = passwordSalt;
         }
 
-        public int Id { get; }
+        public int Id { get; private set; }
 
-        public string Name { get; }
+        public string Name { get; private set; }
 
         public string Email { get; set; }
 
@@ -41,7 +41,7 @@ namespace CoyoteNETCore.Shared
 
         public Role Role { get; set; }
 
-        public DateTime RegisteredAt { get; } = DateTime.Now;
+        public DateTime RegisteredAt { get; private set; } = DateTime.Now;
 
         public bool IsDeletionRequested { get; set; } = false;
 
@@ -67,12 +67,12 @@ namespace CoyoteNETCore.Shared
             }
         }
 
-        public ICollection<LoggingEntry> LoggingInAttempts { get; } = new List<LoggingEntry>();
+        public ICollection<LoggingEntry> LoggingInAttempts { get; private set; } = new List<LoggingEntry>();
 
-        public ICollection<Post> Posts { get; } = new List<Post>();
+        public ICollection<Post> Posts { get; private set; } = new List<Post>();
 
-        public ICollection<Notification> Notifications { get; } = new List<Notification>();
+        public ICollection<Notification> Notifications { get; private set; } = new List<Notification>();
 
-        public ICollection<UserFile> DownloadedFilesLog { get; } = new List<UserFile>();
+        public ICollection<UserFile> DownloadedFilesLog { get; private set;} = new List<UserFile>();
     }
 }

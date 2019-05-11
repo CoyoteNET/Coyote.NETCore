@@ -22,12 +22,12 @@ namespace CoyoteNETCore.Shared
 
         public string Content { get; set; }
 
-        public Thread Thread { get; }
+        public Thread Thread { get; private set; }
 
-        public User Author { get; }
+        public User Author { get; private set; }
 
-        public ICollection<PostEdit> Editions /* better wording needed */ { get; } = new List<PostEdit>();
+        public ICollection<PostEdit> Editions /* better wording needed */ { get; private set; } = new List<PostEdit>();
 
-        public ICollection<PostComment> Comments { get; } = new List<PostComment>();
+        public ICollection<PostComment> Comments { get; private set; } = new List<PostComment>();
     }
 }
