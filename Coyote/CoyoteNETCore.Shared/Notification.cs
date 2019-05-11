@@ -6,6 +6,11 @@ namespace CoyoteNETCore.Shared
 {
     public class Notification
     {
+        public Notification()
+        {
+
+        }
+
         public Notification(string name, string description, User user)
         {
             Name = name;
