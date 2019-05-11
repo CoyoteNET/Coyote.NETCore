@@ -51,7 +51,7 @@ namespace CoyoteNETCore.Shared
         {
             get
             {
-                return _LoggingInAttempts
+                return LoggingInAttempts
                        .OrderByDescending(x => x.OccuredAt)
                        .FirstOrDefault(x => !x.Succeeded);
             }
@@ -61,7 +61,7 @@ namespace CoyoteNETCore.Shared
         {
             get
             {
-                return _LoggingInAttempts
+                return LoggingInAttempts
                        .OrderByDescending(x => x.OccuredAt)
                        .FirstOrDefault(x => x.Succeeded);
             }

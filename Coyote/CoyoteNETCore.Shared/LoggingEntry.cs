@@ -9,13 +9,13 @@ namespace CoyoteNETCore.Shared
 
         }
 
-        public LoggingEntry(LoggingType type, DateTime occuredAt, User user, bool succeeded, string pv4, string platformInfo)
+        public LoggingEntry(LoggingType type, DateTime occuredAt, User user, bool succeeded, string IPv4, string platformInfo)
         {
             Type = type;
             OccuredAt = occuredAt;
             User = user;
             Succeeded = succeeded;
-            IPv4 = pv4;
+            IPv4 = IPv4;
             PlatformInfo = platformInfo;
         }
 
