@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel.DataAnnotations;
 
 namespace CoyoteNETCore.Shared
 {
@@ -19,6 +20,7 @@ namespace CoyoteNETCore.Shared
             PlatformInfo = platformInfo;
         }
 
+        [Key]
         public int Id { get; }
 
         public LoggingType Type { get; }
