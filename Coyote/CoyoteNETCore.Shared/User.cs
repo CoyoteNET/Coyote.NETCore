@@ -67,7 +67,6 @@ namespace CoyoteNETCore.Shared
             }
         }
 
-
         public ICollection<LoggingEntry> LoggingInAttempts { get; } = new List<LoggingEntry>();
 
         public ICollection<Post> Posts { get; } = new List<Post>();
