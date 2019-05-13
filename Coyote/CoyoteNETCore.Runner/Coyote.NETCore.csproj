@@ -7,6 +7,9 @@
 
 
   <ItemGroup>
+    <PackageReference Include="FluentValidation.AspNetCore" Version="8.2.0" />
+    <PackageReference Include="MediatR" Version="6.0.0" />
+    <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="6.0.1" />
     <PackageReference Include="Microsoft.AspNetCore.App" />
     <PackageReference Include="Microsoft.AspNetCore.Razor.Design" Version="2.2.0" PrivateAssets="All" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="4.0.1" />
@@ -14,6 +17,7 @@
 
 
   <ItemGroup>
+    <ProjectReference Include="..\CoyoteNETCore.Application\CoyoteNETCore.Application.csproj" />
     <ProjectReference Include="..\CoyoteNETCore.Controllers\CoyoteNETCore.Controllers.csproj" />
     <ProjectReference Include="..\CoyoteNETCore.Shared\CoyoteNETCore.Shared.csproj" />
   </ItemGroup>

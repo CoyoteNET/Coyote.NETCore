@@ -9,7 +9,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CoyoteNETCore.Shared", "Coy
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CoyoteNETCore.Controllers", "CoyoteNETCore.Controllers\CoyoteNETCore.Controllers.csproj", "{1D68DD12-47FA-4A86-AE4E-00015B439BCB}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CoyoteNETCore.Services", "CoyoteNETCore.Services\CoyoteNETCore.Services.csproj", "{4BB14C11-E7AA-4F84-A370-0EA6BB64D50A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CoyoteNETCore.Application", "CoyoteNETCore.Application\CoyoteNETCore.Application.csproj", "{4BB14C11-E7AA-4F84-A370-0EA6BB64D50A}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CoyoteNETCore.DAL", "CoyoteNETCore.DAL\CoyoteNETCore.DAL.csproj", "{1E41242D-2A9F-4B35-AA23-6199A6B1F9F6}"
 EndProject

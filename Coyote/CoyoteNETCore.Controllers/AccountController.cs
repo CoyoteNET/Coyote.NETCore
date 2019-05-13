@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authentication;
+﻿using MediatR;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CoyoteNETCore.Controllers
@@ -7,6 +8,10 @@ namespace CoyoteNETCore.Controllers
     [ApiController]
     public class AccountController : DefaultController
     {
+        public AccountController(IMediator m) : base(m)
+        {
+        }
+
         [HttpGet("LogIn")]
         public IActionResult Login()
         {
