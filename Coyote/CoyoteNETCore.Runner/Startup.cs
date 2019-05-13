@@ -8,6 +8,7 @@ using Microsoft.Extensions.DependencyInjection;
 using CoyoteNETCore.Controllers;
 using CoyoteNETCore.DAL;
 using Swashbuckle.AspNetCore.Swagger;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Swashbuckle.AspNetCore.SwaggerUI;
 using MediatR;
 using CoyoteNETCore.Application.Thread.Command;
@@ -40,12 +41,20 @@ namespace Coyote.NETCore
             {
                 c.SwaggerDoc("v1", new Info { Title = "Coyote API", Version = "v1" });
             });
+
+            services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+                .AddCookie(options =>
+                {
+                    options.LoginPath = "/Account/LogIn";
+                    options.LogoutPath = "/Account/LogOff";
+                })
+                .AddGitHub(Configuration);
         }
 
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, Context context)
         {
             // in order to setup this project easier
-            context.Database.EnsureCreated();
+           // context.Database.EnsureCreated();
 
             app.UseForwardedHeaders(new ForwardedHeadersOptions
             {

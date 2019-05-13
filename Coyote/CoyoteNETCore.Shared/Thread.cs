@@ -1,17 +1,33 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace CoyoteNETCore.Shared
 {
-    public class Thread : Entity
+    public class Thread
     {
-        public string Title { get; set; }
+        private Thread()
+        {
 
-        public string Body { get; set; }
+        }
 
+        public Thread(ThreadCategory category, string tags, string title)
+        {
+            Category = category;
+            Tags = tags;
+            Title = title;
+        }
+
+        public int Id { get; private set; }
+
+        public DateTime CreationDate { get; private set; } = DateTime.Now;
+
+        public ThreadCategory Category { get; set; }
         public User Author { get; set; }
 
-        public ICollection<Post> Posts { get; set; } = new List<Post>();
+        public string Tags { get; set; }
+
+        public string Title { get; set; }
+
+        public ICollection<ThreadEdit> ThreadEdits { get; private set; } = new List<ThreadEdit>();
     }
 }
