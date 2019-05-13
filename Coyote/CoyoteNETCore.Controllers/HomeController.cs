@@ -18,7 +18,7 @@ namespace CoyoteNETCore.Controllers
         public async Task<IActionResult> SampleEndpoint()
         {
             // tests
-            var command = new CreateThreadCommand("Test", "test", new User());
+            var command = new CreateThreadCommand("Test", "test", new User("_", "_", "_", "_"));
 
             var output = await _med.Send(command);
             return StatusCode(200, new { output.Success, output.Result });
