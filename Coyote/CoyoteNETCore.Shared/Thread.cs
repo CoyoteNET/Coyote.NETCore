@@ -22,6 +22,7 @@ namespace CoyoteNETCore.Shared
         public DateTime CreationDate { get; private set; } = DateTime.Now;
 
         public ThreadCategory Category { get; set; }
+
         public User Author { get; set; }
 
         public string Tags { get; set; }
@@ -29,5 +30,9 @@ namespace CoyoteNETCore.Shared
         public string Title { get; set; }
 
         public ICollection<ThreadEdit> ThreadEdits { get; private set; } = new List<ThreadEdit>();
+
+        public ICollection<Post> Posts { get; private set; } = new List<Post>();
+
+        public ICollection<SubscriptionThread> Subscribers { get; private set; } = new List<SubscriptionThread>();
     }
 }

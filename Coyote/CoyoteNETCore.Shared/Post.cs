@@ -22,6 +22,8 @@ namespace CoyoteNETCore.Shared
 
         public string Content { get; set; }
 
+        public int ThreadId { get; private set; }
+
         public Thread Thread { get; private set; }
 
         public User Author { get; private set; }
@@ -29,5 +31,7 @@ namespace CoyoteNETCore.Shared
         public ICollection<PostEdit> Editions /* better wording needed */ { get; private set; } = new List<PostEdit>();
 
         public ICollection<PostComment> Comments { get; private set; } = new List<PostComment>();
+
+        public ICollection<SubscriptionPost> Subscribers { get; private set; } = new List<SubscriptionPost>();
     }
 }

@@ -27,7 +27,7 @@ namespace Coyote.NETCore
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDbContext<Context>(options =>
-                options.UseInMemoryDatabase(Configuration.GetConnectionString("Default")), ServiceLifetime.Transient);
+                options.UseSqlServer(Configuration.GetConnectionString("Default")), ServiceLifetime.Transient);
 
             services.AddMediatR(typeof(CreateThreadCommand).Assembly);
 
@@ -54,7 +54,7 @@ namespace Coyote.NETCore
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, Context context)
         {
             // in order to setup this project easier
-           // context.Database.EnsureCreated();
+           context.Database.EnsureCreated();
 
             app.UseForwardedHeaders(new ForwardedHeadersOptions
             {

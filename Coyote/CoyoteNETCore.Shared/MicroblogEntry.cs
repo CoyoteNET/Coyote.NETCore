@@ -29,5 +29,7 @@ namespace CoyoteNETCore.Shared
         public DateTime CreationDate { get; private set; } = DateTime.Now;
 
         public ICollection<MicroblogEdit> Editions /* better wording needed */ { get; private set; } = new List<MicroblogEdit>();
+
+        public ICollection<SubscriptionMicroblogEntry> Subscribers { get; private set; } = new List<SubscriptionMicroblogEntry>();
     }
 }
