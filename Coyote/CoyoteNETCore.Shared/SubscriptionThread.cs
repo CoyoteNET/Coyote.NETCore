@@ -16,8 +16,8 @@ namespace CoyoteNETCore.Shared
 
         }
 
-        public int SubscriptionObjectId { get; set; }
+        //public int SubscriptionObjectId { get; set; }
 
-        public Thread SubscriptionObject { get; set; }
+        //public Thread SubscriptionObject { get; set; }
     }
 }

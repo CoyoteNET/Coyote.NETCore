@@ -71,6 +71,6 @@ namespace CoyoteNETCore.Shared
 
         public ICollection<Notification> Notifications { get; private set; } = new List<Notification>();
 
-        public ICollection<UserFile> DownloadedFilesLog { get; private set;} = new List<UserFile>();
+        // public ICollection<UserFile> DownloadedFilesLog { get; private set;} = new List<UserFile>();
     }
 }

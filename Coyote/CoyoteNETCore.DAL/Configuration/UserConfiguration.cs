@@ -22,7 +22,7 @@ namespace CoyoteNETCore.DAL.Configuration
             builder.HasMany(x => x.LoggingInAttempts);
             builder.HasMany(x => x.Posts);
             builder.HasMany(x => x.Notifications);
-            builder.HasMany(x => x.DownloadedFilesLog);
+            //builder.HasMany(x => x.DownloadedFilesLog).WithOne(x => x.User).HasForeignKey(x => x.UserId);
         }
     }
 }
