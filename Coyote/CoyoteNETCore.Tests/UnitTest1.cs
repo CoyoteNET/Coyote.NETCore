@@ -22,7 +22,7 @@ namespace CoyoteNETCore.Tests
         public async Task Test1()
         {
             Assert.Empty(await c.Users.ToListAsync());
-            await c.Users.AddAsync(new User("test", "test", "test", "test")
+            await c.Users.AddAsync(new User("test", "test")
             {
                 
             });

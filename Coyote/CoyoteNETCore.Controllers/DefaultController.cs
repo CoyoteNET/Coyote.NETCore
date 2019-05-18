@@ -6,11 +6,11 @@ namespace CoyoteNETCore.Controllers
 {
     public class DefaultController : Controller
     {
-        protected readonly IMediator _med;
+        protected readonly IMediator Mediator;
 
-        public DefaultController(IMediator m)
+        public DefaultController(IMediator mediator)
         {
-            _med = m;
+            Mediator = mediator;
         }
 
         public override void OnActionExecuting(ActionExecutingContext context)
