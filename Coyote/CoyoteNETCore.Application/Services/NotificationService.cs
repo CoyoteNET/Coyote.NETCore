@@ -7,7 +7,7 @@ namespace CoyoteNETCore.Application.Services
     {
         public Task SendAsync()
         {
-            throw new System.NotImplementedException();
+            return Task.CompletedTask;
         }
     }
 }

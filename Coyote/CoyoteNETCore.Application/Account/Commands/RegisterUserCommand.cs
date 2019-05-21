@@ -5,9 +5,9 @@ using CoyoteNETCore.Shared;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
 
-namespace CoyoteNETCore.Application.Auth.Commands
+namespace CoyoteNETCore.Application.Account.Commands
 {
-    public class RegisterUserCommand : IRequest<Unit>
+    public class RegisterUserCommand : IRequest<(bool Success, string Result)>
     {
         public string Name { get; set; }
 
@@ -15,20 +15,20 @@ namespace CoyoteNETCore.Application.Auth.Commands
 
         public string Password { get; set; }
 
-        private class Handler : IRequestHandler<RegisterUserCommand, Unit>
+        private class Handler : IRequestHandler<RegisterUserCommand, (bool Success, string Result)>
         {
             private readonly Context _db;
-            private readonly Mediator _mediator;
+            private readonly IMediator _mediator;
             private readonly IPasswordHasher<User> _passwordHasher;
 
-            public Handler(Context db, Mediator mediator, IPasswordHasher<User> passwordHasher)
+            public Handler(Context db, IMediator mediator, IPasswordHasher<User> passwordHasher)
             {
                 _db = db;
                 _mediator = mediator;
                 _passwordHasher = passwordHasher;
             }
 
-            public async Task<Unit> Handle(RegisterUserCommand request, CancellationToken cancellationToken)
+            public async Task<(bool Success, string Result)> Handle(RegisterUserCommand request, CancellationToken cancellationToken)
             {
                 var user = new User(request.Name, request.Email);
                 user.PasswordHash = _passwordHasher.HashPassword(user, request.Password);
@@ -38,7 +38,7 @@ namespace CoyoteNETCore.Application.Auth.Commands
 
                 await _mediator.Publish(new UserRegistered { Email = request.Email }, cancellationToken);
 
-                return Unit.Value;
+                return (true, "User has been registered");
             }
         }
     }

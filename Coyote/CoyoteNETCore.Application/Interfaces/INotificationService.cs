@@ -2,7 +2,7 @@
 
 namespace CoyoteNETCore.Application.Interfaces
 {
-    internal interface INotificationService
+    public interface INotificationService
     {
         Task SendAsync();
     }

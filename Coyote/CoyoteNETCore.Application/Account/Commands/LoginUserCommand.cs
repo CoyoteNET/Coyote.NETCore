@@ -11,7 +11,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
-namespace CoyoteNETCore.Application.Auth.Commands
+namespace CoyoteNETCore.Application.Account.Commands
 {
     public class LoginUserCommand : IRequest<(bool Success, string Result)>
     {

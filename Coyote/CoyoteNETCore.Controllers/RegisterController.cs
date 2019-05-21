@@ -1,10 +1,10 @@
-﻿using CoyoteNETCore.Application.Auth.Commands;
+﻿using System.Threading.Tasks;
+using CoyoteNETCore.Application.Auth.Commands;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CoyoteNETCore.Controllers
 {
-
     [Route("[controller]")]
     [ApiController]
     public class RegisterController : DefaultController
@@ -14,13 +14,11 @@ namespace CoyoteNETCore.Controllers
         }
 
         [HttpPost]
-        public IActionResult Register([FromBody]RegisterUserCommand command)
+        public async Task<IActionResult> Register([FromBody]RegisterUserCommand command)
         {
-            Mediator.Send(command);
+            var (success, result) = await Mediator.Send(command);
 
-            return NoContent();
-        }
-
-        
+            return StatusCode(200, new {success, result});
+        }       
     }
 }

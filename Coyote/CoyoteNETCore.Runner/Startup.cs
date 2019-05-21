@@ -1,4 +1,5 @@
-﻿using CoyoteNETCore.Application.Auth.Commands;
+﻿using CoyoteNETCore.Application.Account.Commands;
+using CoyoteNETCore.Application.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpOverrides;
@@ -15,6 +16,7 @@ using Swashbuckle.AspNetCore.SwaggerUI;
 using MediatR;
 using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Identity;
+using CoyoteNETCore.Application.Interfaces;
 
 namespace Coyote.NETCore
 {
@@ -41,6 +43,7 @@ namespace Coyote.NETCore
                 .SetCompatibilityVersion(CompatibilityVersion.Version_2_2)
                 .AddFluentValidation(c => c.RegisterValidatorsFromAssemblyContaining(typeof(RegisterUserCommandValidation)));
 
+            services.AddTransient<INotificationService, NotificationService>();
             services.AddTransient<IPasswordHasher<User>, PasswordHasher<User>>();
             services.AddHttpContextAccessor();
 

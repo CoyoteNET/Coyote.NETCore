@@ -3,7 +3,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using CoyoteNETCore.Application.Interfaces;
 
-namespace CoyoteNETCore.Application.Auth.Commands
+namespace CoyoteNETCore.Application.Account.Commands
 {
     public class UserRegistered : INotification
     {
