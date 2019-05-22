@@ -1,4 +1,5 @@
-﻿using System.Threading;
+﻿using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using CoyoteNETCore.DAL;
 using CoyoteNETCore.Shared;
@@ -30,6 +31,17 @@ namespace CoyoteNETCore.Application.Account.Commands
 
             public async Task<(bool Success, string Result)> Handle(RegisterUserCommand request, CancellationToken cancellationToken)
             {
+                //TODO: move validation somewhere 
+                if (_db.Users.Any(x => x.Name == request.Name))
+                {
+                    return (false, "An account with the given username already exists.");
+                }
+
+                if (_db.Users.Any(x => x.Email == request.Email))
+                {
+                    return (false, "The e-mail address provided is already used.");
+                }
+
                 var user = new User(request.Name, request.Email);
                 user.PasswordHash = _passwordHasher.HashPassword(user, request.Password);
 

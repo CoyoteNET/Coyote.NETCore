@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
+using CoyoteNETCore.Application.Account.Commands;
 using MediatR;
-using CoyoteNETCore.Application.Auth.Commands;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Mvc;
 
