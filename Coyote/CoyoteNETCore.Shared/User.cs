@@ -29,6 +29,10 @@ namespace CoyoteNETCore.Shared
 
         public DateTime? EmailConfirmationDate { get; set; }
 
+        public DateTime? BanExpirationDate { get; set; }
+
+        public bool IsUserBanned => BanExpirationDate.HasValue ? DateTime.Now > BanExpirationDate.Value : false;
+
         public string PasswordHash { get; private set; }
 
         public string PasswordSalt { get; private set; }
@@ -71,6 +75,6 @@ namespace CoyoteNETCore.Shared
 
         public ICollection<Notification> Notifications { get; private set; } = new List<Notification>();
 
-        public ICollection<UserFile> DownloadedFilesLog { get; private set;} = new List<UserFile>();
+        // public ICollection<UserFile> DownloadedFilesLog { get; private set;} = new List<UserFile>();
     }
 }

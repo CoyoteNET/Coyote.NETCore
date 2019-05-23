@@ -10,11 +10,12 @@ namespace CoyoteNETCore.Shared
 
         }
 
-        public Thread(ThreadCategory category, string tags, string title)
+        public Thread(ThreadCategory category, string tags, string title, User author)
         {
             Category = category;
             Tags = tags;
             Title = title;
+            Author = author ?? throw new Exception();
         }
 
         public int Id { get; private set; }
@@ -22,6 +23,7 @@ namespace CoyoteNETCore.Shared
         public DateTime CreationDate { get; private set; } = DateTime.Now;
 
         public ThreadCategory Category { get; set; }
+
         public User Author { get; set; }
 
         public string Tags { get; set; }
