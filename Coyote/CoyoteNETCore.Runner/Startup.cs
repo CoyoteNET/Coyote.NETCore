@@ -11,7 +11,7 @@ using Swashbuckle.AspNetCore.Swagger;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Swashbuckle.AspNetCore.SwaggerUI;
 using MediatR;
-using CoyoteNETCore.Application.Thread.Command;
+using CoyoteNETCore.Application.Threads.Command;
 
 namespace Coyote.NETCore
 {

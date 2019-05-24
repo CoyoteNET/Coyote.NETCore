@@ -33,7 +33,7 @@ namespace CoyoteNETCore.Controllers
                 return BadRequest("Unable to determine User's profile");
             }
             
-            var result = _med.Send(data);
+            var result = await _med.Send(data);
 
             return Json(new { });
         }
