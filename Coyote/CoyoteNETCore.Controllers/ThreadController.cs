@@ -23,7 +23,18 @@ namespace CoyoteNETCore.Controllers
 
         [HttpPost("Thread")]
         public async Task<IActionResult> CreateThread([FromBody] CreateThreadCommand data)
-        {
+        {       
+            if (int.TryParse(User.FindFirst(ClaimTypes.NameIdentifier).Value, out var id))
+            {
+                data.AuthorId = id;
+            }
+            else
+            {
+                return BadRequest("Unable to determine User's profile");
+            }
+            
+            var result = _med.Send(data);
+
             return Json(new { });
         }
     }

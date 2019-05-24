@@ -1,6 +1,7 @@
 ﻿using CoyoteNETCore.DAL;
 using CoyoteNETCore.Shared;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,12 +13,12 @@ namespace CoyoteNETCore.Application.Threads.Command
 {
     public class CreateThreadCommand : IRequest<(bool Success, IEnumerable<string> Result, int? Id)>
     {
-        public CreateThreadCommand(string body, string title, int categoryId, User author)
+        public CreateThreadCommand(string body, string title, int categoryId, int authorId)
         {
             Body = body;
             Title = title;
             ThreadCategoryId = categoryId;
-            Author = author ?? throw new Exception();
+            AuthorId = authorId;
         }
 
         public string Body { get; }
@@ -26,7 +27,9 @@ namespace CoyoteNETCore.Application.Threads.Command
 
         public string Tags { get; }
 
-        public User Author { get; }
+        public User Author { get; set; }
+
+        public int AuthorId { get; set; }
 
         public int ThreadCategoryId { get; }
 
@@ -43,6 +46,8 @@ namespace CoyoteNETCore.Application.Threads.Command
 
             public async Task<(bool Success, IEnumerable<string> Result, int? Id)> Handle(CreateThreadCommand request, CancellationToken cancellationToken)
             {
+                request.Author = await _context.Users.FirstOrDefaultAsync(x => x.Id == request.AuthorId);
+
                 var verifyResult = await Verify(request);
 
                 if (!verifyResult.Success)
@@ -71,12 +76,17 @@ namespace CoyoteNETCore.Application.Threads.Command
             {
                 var problems = new List<string>();
 
-                if (ValidationObject.Author.IsUserBanned)
+                if (ValidationObject.Author == null)
+                {
+                    problems.Add("Unable to determine User's profile");
+                }
+
+                if (ValidationObject.Author?.IsUserBanned ?? true)
                 {
                     problems.Add("Banned users are unable to create threads.");
                 }
 
-                if (!_context.ThreadCategories.Any(c => c.Id == ValidationObject.ThreadCategoryId))
+                if (!await _context.ThreadCategories.AnyAsync(c => c.Id == ValidationObject.ThreadCategoryId))
                 {
                     problems.Add($"Thread category with an Id: '{ValidationObject.ThreadCategoryId}' does not exist.");
                 }

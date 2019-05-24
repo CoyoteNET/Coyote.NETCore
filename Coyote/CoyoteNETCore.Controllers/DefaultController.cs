@@ -1,6 +1,8 @@
-﻿using MediatR;
+﻿using CoyoteNETCore.Shared;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
+using System.Security.Claims;
 
 namespace CoyoteNETCore.Controllers
 {
@@ -8,9 +10,9 @@ namespace CoyoteNETCore.Controllers
     {
         protected readonly IMediator _med;
 
-        public DefaultController(IMediator m)
+        public DefaultController(IMediator mediator)
         {
-            _med = m;
+            _med = mediator;
         }
 
         public override void OnActionExecuting(ActionExecutingContext context)
