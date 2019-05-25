@@ -53,7 +53,6 @@ namespace CoyoteNETCore.Application.Threads.Command
                 if (!verifyResult.Success)
                 {
                     return (false, verifyResult.Result, null);
-
                 }
 
                 return await CreateThread(request);
