@@ -33,7 +33,7 @@ namespace CoyoteNETCore.Application.Threads.Command
 
         public int ThreadCategoryId { get; }
 
-        private class Handler :
+        public class Handler :
             IRequestHandler<CreateThreadCommand, (bool Success, IEnumerable<string> Result, int? Id)>, 
             BusinessLogicValidation<CreateThreadCommand>
         {
