@@ -14,8 +14,9 @@ namespace CoyoteNETCore.Tests
 
         public DatabaseModelVerification()
         {
+            Console.WriteLine("Using CoyoteNET_TestDatabase");
             var optionsBuilder = new DbContextOptionsBuilder<Context>();
-            optionsBuilder.UseInMemoryDatabase("database");
+            optionsBuilder.UseSqlServer(@"Server=(local)\SQL2017;Database=CoyoteNET_TestDatabase;User ID=sa;Password=Password12!;");
             c = new Context(optionsBuilder.Options);
             c.Database.EnsureCreated();
         }
