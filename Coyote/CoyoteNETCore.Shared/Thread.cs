@@ -30,6 +30,8 @@ namespace CoyoteNETCore.Shared
 
         public string Title { get; set; }
 
+        public ICollection<Post> Posts { get; private set; } = new List<Post>();
+
         public ICollection<ThreadEdit> ThreadEdits { get; private set; } = new List<ThreadEdit>();
     }
 }

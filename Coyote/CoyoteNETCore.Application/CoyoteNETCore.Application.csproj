@@ -5,12 +5,14 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\CoyoteNETCore.DAL\CoyoteNETCore.DAL.csproj" />
-    <ProjectReference Include="..\CoyoteNETCore.Shared\CoyoteNETCore.Shared.csproj" />
+    <Compile Remove="Thread\**" />
+    <EmbeddedResource Remove="Thread\**" />
+    <None Remove="Thread\**" />
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Thread\Query\" />
+    <ProjectReference Include="..\CoyoteNETCore.DAL\CoyoteNETCore.DAL.csproj" />
+    <ProjectReference Include="..\CoyoteNETCore.Shared\CoyoteNETCore.Shared.csproj" />
   </ItemGroup>
 
   <ItemGroup>

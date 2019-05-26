@@ -4,9 +4,8 @@ using CoyoteNETCore.DAL;
 using Xunit;
 using CoyoteNETCore.Shared;
 using System;
-using CoyoteNETCore.Application.Threads.Command;
 using System.Threading;
-using System.Reflection;
+using CoyoteNETCore.Application.Threads.Commands;
 
 namespace CoyoteNETCore.Tests
 {
@@ -44,6 +43,7 @@ namespace CoyoteNETCore.Tests
             Assert.NotNull(await context.Threads.FirstOrDefaultAsync());
             Assert.NotNull(await context.ThreadCategories.FirstOrDefaultAsync());
             Assert.NotNull(await context.ForumSections.FirstOrDefaultAsync());
+            Assert.True(await context.Posts.AnyAsync(x => x.Content == command.Body));
         }
 
         [Fact]
@@ -61,6 +61,7 @@ namespace CoyoteNETCore.Tests
 
             Assert.False(result.Success);
             Assert.Null(await context.Threads.FirstOrDefaultAsync());
+            Assert.False(await context.Posts.AnyAsync(x => x.Content == command.Body));
         }
 
         [Fact]
@@ -74,6 +75,7 @@ namespace CoyoteNETCore.Tests
 
             Assert.False(result.Success);
             Assert.Null(await context.Threads.FirstOrDefaultAsync());
+            Assert.False(await context.Posts.AnyAsync(x => x.Content == command.Body));
         }
     }
 }

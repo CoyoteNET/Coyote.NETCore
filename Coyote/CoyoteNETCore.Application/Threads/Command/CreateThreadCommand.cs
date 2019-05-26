@@ -9,7 +9,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace CoyoteNETCore.Application.Threads.Command
+namespace CoyoteNETCore.Application.Threads.Commands
 {
     public class CreateThreadCommand : IRequest<(bool Success, IEnumerable<string> Result, int? Id)>
     {
@@ -35,7 +35,7 @@ namespace CoyoteNETCore.Application.Threads.Command
 
         public class Handler :
             IRequestHandler<CreateThreadCommand, (bool Success, IEnumerable<string> Result, int? Id)>, 
-            BusinessLogicValidation<CreateThreadCommand>
+            IBusinessLogicValidation<CreateThreadCommand>
         {
             private readonly Context _context;
 
@@ -64,6 +64,10 @@ namespace CoyoteNETCore.Application.Threads.Command
 
                 var thread = new Shared.Thread(category, request.Tags, request.Title, request.Author);
 
+                var first_post = new Post(request.Body, thread, request.Author);
+
+                thread.Posts.Add(first_post);
+
                 await _context.Threads.AddAsync(thread);
 
                 await _context.SaveChangesAsync();
@@ -74,6 +78,12 @@ namespace CoyoteNETCore.Application.Threads.Command
             public async Task<(bool Success, IEnumerable<string> Result)> Verify(CreateThreadCommand ValidationObject)
             {
                 var problems = new List<string>();
+
+                if (ValidationObject == null)
+                {
+                    problems.Add("Data to create new thread was not received. Something went wrong.");
+                    return (true, problems);
+                }
 
                 if (ValidationObject.Author == null)
                 {
@@ -88,6 +98,11 @@ namespace CoyoteNETCore.Application.Threads.Command
                 if (!await _context.ThreadCategories.AnyAsync(c => c.Id == ValidationObject.ThreadCategoryId))
                 {
                     problems.Add($"Thread category with an Id: '{ValidationObject.ThreadCategoryId}' does not exist.");
+                }
+
+                if (string.IsNullOrWhiteSpace(ValidationObject.Body))
+                {
+                    problems.Add("Thread cannot be empty.");
                 }
 
                 return (!problems.Any(), problems);

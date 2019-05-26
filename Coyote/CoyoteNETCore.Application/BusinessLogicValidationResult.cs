@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace CoyoteNETCore.Application
 {
-    interface BusinessLogicValidation<T>
+    interface IBusinessLogicValidation<T>
     {
         Task<(bool Success, IEnumerable<string> Result)> Verify(T ValidationObject);
     }

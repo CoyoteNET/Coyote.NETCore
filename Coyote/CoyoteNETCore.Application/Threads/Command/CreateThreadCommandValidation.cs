@@ -1,6 +1,6 @@
 ﻿using FluentValidation;
 
-namespace CoyoteNETCore.Application.Threads.Command
+namespace CoyoteNETCore.Application.Threads.Commands
 {
     public class CreateThreadCommandValidation : AbstractValidator<CreateThreadCommand>
     {
