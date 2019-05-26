@@ -1,4 +1,4 @@
-﻿using CoyoteNETCore.Application.Threads.Command;
+﻿using CoyoteNETCore.Application.Threads.Commands;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
