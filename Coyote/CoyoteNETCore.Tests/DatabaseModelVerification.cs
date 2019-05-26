@@ -14,9 +14,14 @@ namespace CoyoteNETCore.Tests
 
         public DatabaseModelVerification()
         {
+            // AppVeyor:
+            var connString = @"Server=(local)\SQL2017;Database=CoyoteNET_TestDatabase;User ID=sa;Password=Password12!;";
+            // Local:
+            //var connString = @"Server=.\SQLExpress;Database=CoyoteNET_TestDatabase;Trusted_Connection=Yes;";
+
             Console.WriteLine("Using CoyoteNET_TestDatabase");
             var optionsBuilder = new DbContextOptionsBuilder<Context>();
-            optionsBuilder.UseSqlServer(@"Server=(local)\SQL2017;Database=CoyoteNET_TestDatabase;User ID=sa;Password=Password12!;");
+            optionsBuilder.UseSqlServer(connString);
             c = new Context(optionsBuilder.Options);
             c.Database.EnsureCreated();
         }
