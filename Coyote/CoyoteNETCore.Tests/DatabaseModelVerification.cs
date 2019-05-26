@@ -6,29 +6,24 @@ using CoyoteNETCore.Shared;
 using System;
 using System.Linq;
 
-
 namespace CoyoteNETCore.Tests
 {
     public class DatabaseModelVerification : IDisposable
     {
         private readonly Context c;
 
-        public void Dispose()
-        {
-            c.Database.EnsureDeleted();
-        }
-
         public DatabaseModelVerification()
         {
             var optionsBuilder = new DbContextOptionsBuilder<Context>();
-            optionsBuilder.UseSqlServer("Server=.\\SQLExpress;Database=CoyoteNET_Tests;Trusted_Connection=True;");
+            optionsBuilder.UseInMemoryDatabase("database");
             c = new Context(optionsBuilder.Options);
             c.Database.EnsureCreated();
         }
 
         [Fact]
-        public async Task CreatingUserWithAvatar()
+        public async Task Test1()
         {
+            Assert.Empty(await c.Users.ToListAsync());
             await c.Users.AddAsync(new User("test", "test", "test", "test")
             {
                 
@@ -78,5 +73,9 @@ namespace CoyoteNETCore.Tests
             Assert.Equal(2, c.Posts.Include(x => x.Subscribers).Where(x => x.Subscribers.Any(z => z.Subscriber.Name == "a")).Count());
         }
 
+        public void Dispose()
+        {
+            c.Database.EnsureDeleted();
+        }
     }
 }
