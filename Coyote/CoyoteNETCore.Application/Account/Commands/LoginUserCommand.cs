@@ -54,6 +54,7 @@ namespace CoyoteNETCore.Application.Account.Commands
             {
                 var claims = new List<Claim>
                 {
+                    //TODO: Add more Claims
                     new Claim(ClaimTypes.Name, request.Name),
                 };
                 var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);

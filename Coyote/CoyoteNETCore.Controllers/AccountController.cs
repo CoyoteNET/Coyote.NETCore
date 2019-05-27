@@ -14,6 +14,14 @@ namespace CoyoteNETCore.Controllers
         {
         }
 
+        [HttpPost("Register")]
+        public async Task<IActionResult> Register([FromBody]RegisterUserCommand command)
+        {
+            var (success, result) = await Mediator.Send(command);
+
+            return StatusCode(200, new { success, result });
+        }
+
         [HttpPost("LogIn")]
         public async Task<IActionResult> Login([FromBody]LoginUserCommand command)
         {
