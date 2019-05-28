@@ -1,7 +1,7 @@
-﻿using System.Net.Http;
+﻿using System.Net;
+using System.Net.Http;
 using System.Threading.Tasks;
 using Coyote.NETCore;
-using Newtonsoft.Json;
 using Shouldly;
 using Xunit;
 
@@ -56,13 +56,10 @@ namespace CoyoteNETCore.Tests
             var user = new { Name = "test", Password = "test1234test", Email = "test@test.pl" };
             
             var httpResponse = await _client.PostAsync("/Account/Register", user.AsJsonString());
-            httpResponse.EnsureSuccessStatusCode();
 
             var stringResponse = await httpResponse.Content.ReadAsStringAsync();
-            var result = JsonConvert.DeserializeObject<Response>(stringResponse);
-
-            result.Success.ShouldBe(true);
-            result.Result.ShouldBe("User has been registered");
+            stringResponse.ShouldBe("User has been registered");
+            httpResponse.EnsureSuccessStatusCode();
         }
 
         [Fact]
@@ -73,13 +70,10 @@ namespace CoyoteNETCore.Tests
             
             (await _client.PostAsync("/Account/Register", firstUser.AsJsonString())).EnsureSuccessStatusCode();
             var httpResponse = await _client.PostAsync("/Account/Register", secondUser.AsJsonString());
-            httpResponse.EnsureSuccessStatusCode();
-
+            
             var stringResponse = await httpResponse.Content.ReadAsStringAsync();
-            var result = JsonConvert.DeserializeObject<Response>(stringResponse);
-
-            result.Success.ShouldBe(false);
-            result.Result.ShouldBe("An account with the given username already exists.");
+            stringResponse.ShouldBe("An account with the given username already exists.");
+            httpResponse.StatusCode.ShouldBe(HttpStatusCode.BadRequest);
         }
 
         [Fact]
@@ -90,13 +84,10 @@ namespace CoyoteNETCore.Tests
 
             (await _client.PostAsync("/Account/Register", firstUser.AsJsonString())).EnsureSuccessStatusCode();
             var httpResponse = await _client.PostAsync("/Account/Register", secondUser.AsJsonString());
-            httpResponse.EnsureSuccessStatusCode();
-
+            
             var stringResponse = await httpResponse.Content.ReadAsStringAsync();
-            var result = JsonConvert.DeserializeObject<Response>(stringResponse);
-
-            result.Success.ShouldBe(false);
-            result.Result.ShouldBe("The e-mail address provided is already used.");
+            stringResponse.ShouldBe("The e-mail address provided is already used.");
+            httpResponse.StatusCode.ShouldBe(HttpStatusCode.BadRequest);
         }
 
         [Fact]
@@ -107,13 +98,10 @@ namespace CoyoteNETCore.Tests
 
             (await _client.PostAsync("/Account/Register", firstUser.AsJsonString())).EnsureSuccessStatusCode();
             var httpResponse = await _client.PostAsync("/Account/Register", secondUser.AsJsonString());
-            httpResponse.EnsureSuccessStatusCode();
 
             var stringResponse = await httpResponse.Content.ReadAsStringAsync();
-            var result = JsonConvert.DeserializeObject<Response>(stringResponse);
-
-            result.Success.ShouldBe(false);
-            result.Result.ShouldBe("An account with the given username already exists.");
+            stringResponse.ShouldBe("An account with the given username already exists.");
+            httpResponse.StatusCode.ShouldBe(HttpStatusCode.BadRequest);
         }
 
         [Fact]
@@ -124,13 +112,10 @@ namespace CoyoteNETCore.Tests
 
             (await _client.PostAsync("/Account/Register", firstUser.AsJsonString())).EnsureSuccessStatusCode();
             var httpResponse = await _client.PostAsync("/Account/Register", secondUser.AsJsonString());
-            httpResponse.EnsureSuccessStatusCode();
 
             var stringResponse = await httpResponse.Content.ReadAsStringAsync();
-            var result = JsonConvert.DeserializeObject<Response>(stringResponse);
-
-            result.Success.ShouldBe(false);
-            result.Result.ShouldBe("The e-mail address provided is already used.");
+            stringResponse.ShouldBe("The e-mail address provided is already used.");
+            httpResponse.StatusCode.ShouldBe(HttpStatusCode.BadRequest);
         }
 
         [Fact]
@@ -141,36 +126,24 @@ namespace CoyoteNETCore.Tests
 
             (await _client.PostAsync("/Account/Register", firstUser.AsJsonString())).EnsureSuccessStatusCode();
             var httpResponse = await _client.PostAsync("/Account/Register", secondUser.AsJsonString());
-            httpResponse.EnsureSuccessStatusCode();
-
+            
             var stringResponse = await httpResponse.Content.ReadAsStringAsync();
-            var result = JsonConvert.DeserializeObject<Response>(stringResponse);
-
-            result.Success.ShouldBe(true);
-            result.Result.ShouldBe("User has been registered");
+            stringResponse.ShouldBe("User has been registered");
+            httpResponse.EnsureSuccessStatusCode();
         }
 
         [Fact]
-        public async Task CreateUser_EmailContainsExisting_UnsuccessfullyCreated()
+        public async Task CreateUser_EmailContainsExisting_SuccessfullyCreated()
         {
             var firstUser = new { Name = "test9", Password = "test1234test", Email = "test10@test.pl" };
             var secondUser = new { Name = "test10", Password = "test1234test", Email = "Xtest10@test.plX" };
 
             (await _client.PostAsync("/Account/Register", firstUser.AsJsonString())).EnsureSuccessStatusCode();
             var httpResponse = await _client.PostAsync("/Account/Register", secondUser.AsJsonString());
-            httpResponse.EnsureSuccessStatusCode();
-
+            
             var stringResponse = await httpResponse.Content.ReadAsStringAsync();
-            var result = JsonConvert.DeserializeObject<Response>(stringResponse);
-
-            result.Success.ShouldBe(true);
-            result.Result.ShouldBe("User has been registered");
+            stringResponse.ShouldBe("User has been registered");
+            httpResponse.EnsureSuccessStatusCode();
         }
-    }
-
-    public class Response
-    {
-        public bool Success { get; set; }
-        public string Result { get; set; }
     }
 }

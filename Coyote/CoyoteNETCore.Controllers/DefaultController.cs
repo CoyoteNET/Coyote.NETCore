@@ -1,6 +1,7 @@
-﻿using MediatR;
+﻿using System;
+using CoyoteNETCore.Application;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Filters;
 
 namespace CoyoteNETCore.Controllers
 {
@@ -13,9 +14,23 @@ namespace CoyoteNETCore.Controllers
             Mediator = mediator;
         }
 
-        public override void OnActionExecuting(ActionExecutingContext context)
+        protected IActionResult CreateResponse<T>(Result<T> result, Func<IActionResult> actionSucceeded)
         {
-            base.OnActionExecuting(context);
+            return !result.IsSucceeded ? HandleError(result.Error) : actionSucceeded();
+        }
+
+        private IActionResult HandleError(Error error)
+        {
+            switch (error.ErrorType)
+            {
+                case ErrorType.NotFound:
+                    return NotFound(error.Description);
+                case ErrorType.BadRequest:
+                case ErrorType.AlreadyExists:
+                    return BadRequest(error.Description);
+                default:
+                    return BadRequest(error.Description);
+            }
         }
     }
 }

@@ -13,13 +13,13 @@ using Microsoft.EntityFrameworkCore;
 
 namespace CoyoteNETCore.Application.Account.Commands
 {
-    public class LoginUserCommand : IRequest<(bool Success, string Result)>
+    public class LoginUserCommand : IRequest<Result<Unit>>
     {
         public string Name { get; set; }
 
         public string Password { get; set; }
 
-        private class Handler : IRequestHandler<LoginUserCommand, (bool Success, string Result)>
+        private class Handler : IRequestHandler<LoginUserCommand, Result<Unit>>
         {
             private readonly Context _db;
             private readonly IPasswordHasher<User> _passwordHasher;
@@ -32,22 +32,22 @@ namespace CoyoteNETCore.Application.Account.Commands
                 _httpAccessor = httpAccessor;
             }
 
-            public async Task<(bool Success, string Result)> Handle(LoginUserCommand request, CancellationToken cancellationToken)
+            public async Task<Result<Unit>> Handle(LoginUserCommand request, CancellationToken cancellationToken)
             {
                 var user = await _db.Users.SingleAsync(x => x.Name == request.Name, cancellationToken);
                 if (user == null)
                 {
-                    return (false, "User Not Found");
+                    return new Result<Unit>(ErrorType.NotFound, "User Not Found");
                 }
 
                 var verificationResult = _passwordHasher.VerifyHashedPassword(user, user.PasswordHash, request.Password);
                 if (verificationResult == PasswordVerificationResult.Success)
                 {
                     await SingIn(request);
-                    return (true, "Logged");
+                    return new Result<Unit>(Unit.Value);
                 }
 
-                return (false, "Wrong Password");
+                return new Result<Unit>(ErrorType.BadRequest, "Wrong Password");
             }
 
             private async Task SingIn(LoginUserCommand request)

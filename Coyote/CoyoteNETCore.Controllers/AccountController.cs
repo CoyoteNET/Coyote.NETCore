@@ -17,17 +17,17 @@ namespace CoyoteNETCore.Controllers
         [HttpPost("Register")]
         public async Task<IActionResult> Register([FromBody]RegisterUserCommand command)
         {
-            var (success, result) = await Mediator.Send(command);
+            var result = await Mediator.Send(command);
 
-            return StatusCode(200, new { success, result });
+            return CreateResponse(result, () => Ok(result.Value));
         }
 
         [HttpPost("LogIn")]
         public async Task<IActionResult> Login([FromBody]LoginUserCommand command)
         {
-            var (success, result) = await Mediator.Send(command);
+            var result = await Mediator.Send(command);
 
-            return StatusCode(200, new { success, result });
+            return CreateResponse(result, NoContent);
         }
 
         [HttpGet("GitHub/LogIn")]
