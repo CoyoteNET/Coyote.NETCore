@@ -98,6 +98,74 @@ namespace CoyoteNETCore.Tests
             result.Success.ShouldBe(false);
             result.Result.ShouldBe("The e-mail address provided is already used.");
         }
+
+        [Fact]
+        public async Task CreateUser_NameExistsIgnoreCase_UnsuccessfullyCreated()
+        {
+            var firstUser = new { Name = "test5", Password = "test1234test", Email = "test5@test.pl" };
+            var secondUser = new { Name = "tESt5", Password = "test1234test", Email = "test6@test.pl" };
+
+            (await _client.PostAsync("/Account/Register", firstUser.AsJsonString())).EnsureSuccessStatusCode();
+            var httpResponse = await _client.PostAsync("/Account/Register", secondUser.AsJsonString());
+            httpResponse.EnsureSuccessStatusCode();
+
+            var stringResponse = await httpResponse.Content.ReadAsStringAsync();
+            var result = JsonConvert.DeserializeObject<Response>(stringResponse);
+
+            result.Success.ShouldBe(false);
+            result.Result.ShouldBe("An account with the given username already exists.");
+        }
+
+        [Fact]
+        public async Task CreateUser_EmailExistsIgnoreCase_UnsuccessfullyCreated()
+        {
+            var firstUser = new { Name = "test6", Password = "test1234test", Email = "test7@test.pl" };
+            var secondUser = new { Name = "test7", Password = "test1234test", Email = "tESt7@test.pl" };
+
+            (await _client.PostAsync("/Account/Register", firstUser.AsJsonString())).EnsureSuccessStatusCode();
+            var httpResponse = await _client.PostAsync("/Account/Register", secondUser.AsJsonString());
+            httpResponse.EnsureSuccessStatusCode();
+
+            var stringResponse = await httpResponse.Content.ReadAsStringAsync();
+            var result = JsonConvert.DeserializeObject<Response>(stringResponse);
+
+            result.Success.ShouldBe(false);
+            result.Result.ShouldBe("The e-mail address provided is already used.");
+        }
+
+        [Fact]
+        public async Task CreateUser_NameContainsExisting_SuccessfullyCreated()
+        {
+            var firstUser = new { Name = "test8", Password = "test1234test", Email = "test8@test.pl" };
+            var secondUser = new { Name = "Xtest8X", Password = "test1234test", Email = "test9@test.pl" };
+
+            (await _client.PostAsync("/Account/Register", firstUser.AsJsonString())).EnsureSuccessStatusCode();
+            var httpResponse = await _client.PostAsync("/Account/Register", secondUser.AsJsonString());
+            httpResponse.EnsureSuccessStatusCode();
+
+            var stringResponse = await httpResponse.Content.ReadAsStringAsync();
+            var result = JsonConvert.DeserializeObject<Response>(stringResponse);
+
+            result.Success.ShouldBe(true);
+            result.Result.ShouldBe("User has been registered");
+        }
+
+        [Fact]
+        public async Task CreateUser_EmailContainsExisting_UnsuccessfullyCreated()
+        {
+            var firstUser = new { Name = "test9", Password = "test1234test", Email = "test10@test.pl" };
+            var secondUser = new { Name = "test10", Password = "test1234test", Email = "Xtest10@test.plX" };
+
+            (await _client.PostAsync("/Account/Register", firstUser.AsJsonString())).EnsureSuccessStatusCode();
+            var httpResponse = await _client.PostAsync("/Account/Register", secondUser.AsJsonString());
+            httpResponse.EnsureSuccessStatusCode();
+
+            var stringResponse = await httpResponse.Content.ReadAsStringAsync();
+            var result = JsonConvert.DeserializeObject<Response>(stringResponse);
+
+            result.Success.ShouldBe(true);
+            result.Result.ShouldBe("User has been registered");
+        }
     }
 
     public class Response
