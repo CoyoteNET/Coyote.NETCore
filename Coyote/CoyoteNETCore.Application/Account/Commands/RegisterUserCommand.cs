@@ -1,15 +1,15 @@
 ﻿using System;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using CoyoteNETCore.DAL;
 using CoyoteNETCore.Shared;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 
 namespace CoyoteNETCore.Application.Account.Commands
 {
-    public class RegisterUserCommand : IRequest<(bool Success, string Result)>
+    public class RegisterUserCommand : IRequest<Result<string>>
     {
         public string Name { get; set; }
 
@@ -17,7 +17,7 @@ namespace CoyoteNETCore.Application.Account.Commands
 
         public string Password { get; set; }
 
-        private class Handler : IRequestHandler<RegisterUserCommand, (bool Success, string Result)>
+        private class Handler : IRequestHandler<RegisterUserCommand, Result<string>>
         {
             private readonly Context _db;
             private readonly IMediator _mediator;
@@ -30,17 +30,12 @@ namespace CoyoteNETCore.Application.Account.Commands
                 _passwordHasher = passwordHasher;
             }
 
-            public async Task<(bool Success, string Result)> Handle(RegisterUserCommand request, CancellationToken cancellationToken)
+            public async Task<Result<string>> Handle(RegisterUserCommand request, CancellationToken cancellationToken)
             {
-                //TODO: move validation somewhere 
-                if (_db.Users.Any(x => string.Equals(x.Name, request.Name, StringComparison.OrdinalIgnoreCase)))
+                var verifyResult = await Verify<string>(request);
+                if (verifyResult != null) //TODO: ugly
                 {
-                    return (false, "An account with the given username already exists.");
-                }
-
-                if (_db.Users.Any(x => string.Equals(x.Email, request.Email, StringComparison.OrdinalIgnoreCase)))
-                {
-                    return (false, "The e-mail address provided is already used.");
+                    return verifyResult;
                 }
 
                 var user = new User(request.Name, request.Email);
@@ -51,7 +46,22 @@ namespace CoyoteNETCore.Application.Account.Commands
 
                 await _mediator.Publish(new UserRegistered { Email = request.Email }, cancellationToken);
 
-                return (true, "User has been registered");
+                return new Result<string>("User has been registered");
+            }
+
+            private async Task<Result<T>> Verify<T>(RegisterUserCommand request)
+            {
+                if (await _db.Users.AnyAsync(x => string.Equals(x.Name, request.Name, StringComparison.OrdinalIgnoreCase)))
+                {
+                    return new Result<T>(ErrorType.AlreadyExists, "An account with the given username already exists.");
+                }
+
+                if (await _db.Users.AnyAsync(x => string.Equals(x.Email, request.Email, StringComparison.OrdinalIgnoreCase)))
+                {
+                    return new Result<T>(ErrorType.AlreadyExists, "The e-mail address provided is already used.");
+                }
+
+                return null; //TODO: ugly
             }
         }
     }
