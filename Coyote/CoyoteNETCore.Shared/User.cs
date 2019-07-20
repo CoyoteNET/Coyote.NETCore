@@ -11,12 +11,12 @@ namespace CoyoteNETCore.Shared
 
         }
 
-        public User(string name, string email, string passwordHash, string passwordSalt)
+        public User(string name, string email)//, string passwordHash, string passwordSalt)
         {
             Name = name;
             Email = email;
-            PasswordHash = passwordHash;
-            PasswordSalt = passwordSalt;
+            //PasswordHash = passwordHash;
+            //PasswordSalt = passwordSalt;
         }
 
         public int Id { get; private set; }
@@ -29,11 +29,7 @@ namespace CoyoteNETCore.Shared
 
         public DateTime? EmailConfirmationDate { get; set; }
 
-        public DateTime? BanExpirationDate { get; set; }
-
-        public bool IsUserBanned => BanExpirationDate.HasValue ? DateTime.Now > BanExpirationDate.Value : false;
-
-        public string PasswordHash { get; private set; }
+        public string PasswordHash { get; set; }
 
         public string PasswordSalt { get; private set; }
 
