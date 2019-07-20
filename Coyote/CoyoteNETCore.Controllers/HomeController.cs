@@ -10,7 +10,7 @@ namespace CoyoteNETCore.Controllers
     [ApiController]
     public class HomeController : DefaultController
     {
-        public HomeController(IMediator m) : base(m)
+        public HomeController(IMediator mediator) : base(mediator)
         {
         }
 
@@ -18,9 +18,9 @@ namespace CoyoteNETCore.Controllers
         public async Task<IActionResult> SampleEndpoint()
         {
             // tests
-            var command = new CreateThreadCommand("Test", "test", new User("_", "_", "_", "_"));
+            var command = new CreateThreadCommand("Test", "test", new User("_", "_"));
 
-            var output = await _med.Send(command);
+            var output = await Mediator.Send(command);
             return StatusCode(200, new { output.Success, output.Result });
         }
     }

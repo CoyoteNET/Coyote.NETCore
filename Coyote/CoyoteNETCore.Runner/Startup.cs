@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Builder;
+﻿using CoyoteNETCore.Application.Account.Commands;
+using CoyoteNETCore.Application.Services;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Mvc;
@@ -7,11 +9,14 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using CoyoteNETCore.Controllers;
 using CoyoteNETCore.DAL;
+using CoyoteNETCore.Shared;
 using Swashbuckle.AspNetCore.Swagger;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Swashbuckle.AspNetCore.SwaggerUI;
 using MediatR;
-using CoyoteNETCore.Application.Thread.Command;
+using FluentValidation.AspNetCore;
+using Microsoft.AspNetCore.Identity;
+using CoyoteNETCore.Application.Interfaces;
 
 namespace Coyote.NETCore
 {
@@ -29,13 +34,18 @@ namespace Coyote.NETCore
             services.AddDbContext<Context>(options =>
                 options.UseInMemoryDatabase(Configuration.GetConnectionString("Default")), ServiceLifetime.Transient);
 
-            services.AddMediatR(typeof(CreateThreadCommand).Assembly);
+            services.AddMediatR(typeof(RegisterUserCommand).Assembly);
 
             services
                 .AddMvc()
                 .AddApplicationPart(typeof(HomeController).Assembly)
                 .AddControllersAsServices()
-                .SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+                .SetCompatibilityVersion(CompatibilityVersion.Version_2_2)
+                .AddFluentValidation(c => c.RegisterValidatorsFromAssemblyContaining(typeof(RegisterUserCommandValidation)));
+
+            services.AddTransient<INotificationService, NotificationService>();
+            services.AddTransient<IPasswordHasher<User>, PasswordHasher<User>>();
+            services.AddHttpContextAccessor();
 
             services.AddSwaggerGen(c =>
             {
@@ -82,6 +92,8 @@ namespace Coyote.NETCore
             });
 
             //app.UseHttpsRedirection();
+
+            app.UseAuthentication();
 
             app.UseMvc();
         }
