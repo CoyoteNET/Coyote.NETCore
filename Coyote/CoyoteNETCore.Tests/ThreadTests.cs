@@ -29,7 +29,7 @@ namespace CoyoteNETCore.Tests
         public async Task Correctly_Created_Thread_1()
         {
             var handler = new CreateThreadCommand.Handler(context);
-            var user = new User("User1", "User1@coyote.pub", "#$%^$^*^#%$#^&%7876976234523634", "235435745134[]cvxvcb/[;");
+            var user = new User("User1", "User1@coyote.pub");
             var threadCategory = new ThreadCategory("test", "test", new ForumSection("test section"));
 
             await context.AddAsync(threadCategory);
@@ -39,7 +39,7 @@ namespace CoyoteNETCore.Tests
             var command = new CreateThreadCommand("Body", "Title", threadCategory.Id, user.Id);
             var result = await handler.Handle(command, new CancellationToken());
 
-            Assert.True(result.Success);
+            Assert.True(result.IsSucceeded);
             Assert.NotNull(await context.Threads.FirstOrDefaultAsync());
             Assert.NotNull(await context.ThreadCategories.FirstOrDefaultAsync());
             Assert.NotNull(await context.ForumSections.FirstOrDefaultAsync());
@@ -50,7 +50,7 @@ namespace CoyoteNETCore.Tests
         public async Task Incorrectly_Created_Thread_1_CategoryDoesNotExist()
         {
             var handler = new CreateThreadCommand.Handler(context);
-            var user = new User("User1", "User1@coyote.pub", "#$%^$^*^#%$#^&%7876976234523634", "235435745134[]cvxvcb/[;");
+            var user = new User("User1", "User1@coyote.pub");
             var threadCategory = new ThreadCategory("test", "test", new ForumSection("test section"));
 
             await context.AddAsync(user);
@@ -59,7 +59,7 @@ namespace CoyoteNETCore.Tests
             var command = new CreateThreadCommand("Body", "Title", threadCategory.Id, user.Id);
             var result = await handler.Handle(command, new CancellationToken());
 
-            Assert.False(result.Success);
+            Assert.False(result.IsSucceeded);
             Assert.Null(await context.Threads.FirstOrDefaultAsync());
             Assert.False(await context.Posts.AnyAsync(x => x.Content == command.Body));
         }
@@ -73,7 +73,7 @@ namespace CoyoteNETCore.Tests
             var command = new CreateThreadCommand("Body", "Title", threadCategory.Id, 5);
             var result = await handler.Handle(command, new CancellationToken());
 
-            Assert.False(result.Success);
+            Assert.False(result.IsSucceeded);
             Assert.Null(await context.Threads.FirstOrDefaultAsync());
             Assert.False(await context.Posts.AnyAsync(x => x.Content == command.Body));
         }

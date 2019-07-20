@@ -7,16 +7,15 @@ using System.Threading.Tasks;
 namespace CoyoteNETCore.Controllers
 {
     [Route("api/v1/[controller]")]
-    [ApiController]
-    public class HomeController : DefaultController
+    public class ThreadController : DefaultController
     {
-        public HomeController(IMediator m) : base(m)
+        public ThreadController(IMediator m) : base(m)
         {
 
         }
 
         [HttpGet("Thread")]
-        public async Task<IActionResult> GetThread()
+        public IActionResult GetThread()
         {
             return Json(new { });
         }
@@ -33,7 +32,7 @@ namespace CoyoteNETCore.Controllers
                 return BadRequest("Unable to determine User's profile");
             }
             
-            var result = await _mediator.Send(data);
+            var result = await Mediator.Send(data);
 
             return Json(new { });
         }

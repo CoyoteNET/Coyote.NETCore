@@ -1,12 +1,7 @@
-﻿using CoyoteNETCore.Shared;
-using MediatR;
+﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Filters;
-using System.Security.Claims;
-﻿using System;
+using System;
 using CoyoteNETCore.Application;
-using MediatR;
-using Microsoft.AspNetCore.Mvc;
 
 namespace CoyoteNETCore.Controllers
 {
