@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace CoyoteNETCore.Application.Threads.Commands
 {
-    public class CreateThreadCommand : IRequest<(bool Success, IEnumerable<string> Result, int? Id)>
+    public class CreateThreadCommand : IRequest<Result<int>>
     {
         public CreateThreadCommand(string body, string title, int categoryId, int authorId)
         {
@@ -34,7 +34,7 @@ namespace CoyoteNETCore.Application.Threads.Commands
         public int ThreadCategoryId { get; }
 
         public class Handler :
-            IRequestHandler<CreateThreadCommand, (bool Success, IEnumerable<string> Result, int? Id)>, 
+            IRequestHandler<CreateThreadCommand, Result<int>>,
             IBusinessLogicValidation<CreateThreadCommand>
         {
             private readonly Context _context;
@@ -44,7 +44,7 @@ namespace CoyoteNETCore.Application.Threads.Commands
                 _context = context;
             }
 
-            public async Task<(bool Success, IEnumerable<string> Result, int? Id)> Handle(CreateThreadCommand request, CancellationToken cancellationToken)
+            public async Task<Result<int>> Handle(CreateThreadCommand request, CancellationToken cancellationToken)
             {
                 request.Author = await _context.Users.FirstOrDefaultAsync(x => x.Id == request.AuthorId);
 
@@ -52,13 +52,13 @@ namespace CoyoteNETCore.Application.Threads.Commands
 
                 if (!verifyResult.Success)
                 {
-                    return (false, verifyResult.Result, null);
+                    return new Result<int>(ErrorType.BadRequest, string.Join(Environment.NewLine, verifyResult.Result));
                 }
 
                 return await CreateThread(request);
             }
 
-            private async Task<(bool Success, IEnumerable<string> Result, int? Id)> CreateThread(CreateThreadCommand request)
+            private async Task<Result<int>> CreateThread(CreateThreadCommand request)
             {
                 var category = await _context.ThreadCategories.FindAsync(request.ThreadCategoryId);
 
@@ -72,7 +72,7 @@ namespace CoyoteNETCore.Application.Threads.Commands
 
                 await _context.SaveChangesAsync();
 
-                return (true, Enumerable.Empty<string>(), thread.Id);
+                return new Result<int>(thread.Id);
             }
 
             public async Task<(bool Success, IEnumerable<string> Result)> Verify(CreateThreadCommand ValidationObject)
@@ -90,10 +90,10 @@ namespace CoyoteNETCore.Application.Threads.Commands
                     problems.Add("Unable to determine User's profile");
                 }
 
-                if (ValidationObject.Author?.IsUserBanned ?? true)
-                {
-                    problems.Add("Banned users are unable to create threads.");
-                }
+                //if (ValidationObject.Author?.IsUserBanned ?? true)
+                //{
+                //    problems.Add("Banned users are unable to create threads.");
+                //}
 
                 if (!await _context.ThreadCategories.AnyAsync(c => c.Id == ValidationObject.ThreadCategoryId))
                 {
