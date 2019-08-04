@@ -5,16 +5,17 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Register\**" />
     <Compile Remove="Thread\**" />
+    <EmbeddedResource Remove="Register\**" />
     <EmbeddedResource Remove="Thread\**" />
+    <None Remove="Register\**" />
     <None Remove="Thread\**" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\CoyoteNETCore.DAL\CoyoteNETCore.DAL.csproj" />
     <ProjectReference Include="..\CoyoteNETCore.Shared\CoyoteNETCore.Shared.csproj" />
-    <Folder Include="Register\Commands\" />
-    <Folder Include="Thread\Query\" />
   </ItemGroup>
 
   <ItemGroup>

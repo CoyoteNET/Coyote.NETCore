@@ -4,6 +4,7 @@
     {
         NotFound,
         BadRequest,
-        AlreadyExists
+        AlreadyExists,
+        None
     }
 }

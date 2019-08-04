@@ -6,15 +6,20 @@ using CoyoteNETCore.Shared;
 using System;
 using System.Threading;
 using CoyoteNETCore.Application.Threads.Commands;
+using Coyote.NETCore;
+using System.Net.Http;
+using System.Linq;
 
 namespace CoyoteNETCore.Tests
 {
-    public class ThreadTests : IDisposable
+    public class ThreadTests : IDisposable, IClassFixture<CustomWebApplicationFactory<Startup>>
     {
+        private readonly HttpClient _client;
         private readonly Context context;
 
-        public ThreadTests()
+        public ThreadTests(CustomWebApplicationFactory<Startup> factory)
         {
+            _client = factory.CreateClient();
             var optionsBuilder = new DbContextOptionsBuilder<Context>();
             optionsBuilder.UseInMemoryDatabase("database");
             context = new Context(optionsBuilder.Options);
@@ -76,6 +81,31 @@ namespace CoyoteNETCore.Tests
             Assert.False(result.IsSucceeded);
             Assert.Null(await context.Threads.FirstOrDefaultAsync());
             Assert.False(await context.Posts.AnyAsync(x => x.Content == command.Body));
+        }
+
+        [Fact]
+        public async Task Just_Created_Thread_Is_Obtainable()
+        {
+            var handler = new CreateThreadCommand.Handler(context);
+            var user = new User("User1", "User1@coyote.pub");
+            var threadCategory = new ThreadCategory("test", "test", new ForumSection("test section"));
+
+            await context.AddAsync(threadCategory);
+                await context.AddAsync(user);
+                await context.SaveChangesAsync();
+
+            var payload = new CreateThreadCommand("Body", "Title", threadCategory.Id, user.Id);
+
+            var result = await handler.Handle(payload, new CancellationToken());
+
+            var handler2 = new GetThreadQuery.Handler(context);
+
+            var result2 = await handler2.Handle(new GetThreadQuery(result.Value), new CancellationToken());
+
+            Assert.True(result2.IsSucceeded);
+            Assert.NotNull(result2.Value);
+            Assert.Equal(payload.Title, result2.Value.Title);
+            Assert.Contains(result2.Value.Posts, x => x.Content == payload.Body);
         }
     }
 }

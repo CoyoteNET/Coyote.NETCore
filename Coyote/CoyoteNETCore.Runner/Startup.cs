@@ -87,7 +87,7 @@ namespace Coyote.NETCore
             app.UseSwagger();
             app.UseSwaggerUI(c =>
             {
-                c.SwaggerEndpoint("/swagger/v1/swagger.json", "Coyote API V1");
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "Coyote API v1");
                 c.RoutePrefix = string.Empty;
                 c.DocExpansion(DocExpansion.None);
             });

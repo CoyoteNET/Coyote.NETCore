@@ -1,4 +1,5 @@
 ﻿using CoyoteNETCore.Application.Threads.Commands;
+using CoyoteNETCore.Shared.RequestInput;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
@@ -11,30 +12,36 @@ namespace CoyoteNETCore.Controllers
     {
         public ThreadController(IMediator m) : base(m)
         {
-
         }
 
-        [HttpGet("Thread")]
-        public IActionResult GetThread()
+        [HttpPost]
+        public async Task<IActionResult> CreateThread([FromBody] CreateThread data)
         {
-            return Json(new { });
-        }
-
-        [HttpPost("Thread")]
-        public async Task<IActionResult> CreateThread([FromBody] CreateThreadCommand data)
-        {       
-            if (int.TryParse(User.FindFirst(ClaimTypes.NameIdentifier).Value, out var id))
+            if (data == null)
             {
-                data.AuthorId = id;
+                return BadRequest("Received data is broken.");
             }
-            else
+
+            if (!int.TryParse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value, out var id))
             {
                 return BadRequest("Unable to determine User's profile");
             }
-            
-            var result = await Mediator.Send(data);
 
-            return Json(new { });
+            var command = new CreateThreadCommand(data.Body, data.Title, data.ThreadCategoryId, id);
+
+            var result = await Mediator.Send(command);
+
+            return Json(result);
+        }
+
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetThread([FromRoute] int? id)
+        {
+            var query = new GetThreadQuery(id);
+
+            var result = await Mediator.Send(query);
+
+            return Json(result);
         }
     }
 }

@@ -44,18 +44,16 @@ namespace CoyoteNETCore.Application.Threads.Commands
                 _context = context;
             }
 
-            public async Task<Result<int>> Handle(CreateThreadCommand request, CancellationToken cancellationToken)
+            public async Task<Result<int>> Handle(CreateThreadCommand command, CancellationToken cancellationToken)
             {
-                request.Author = await _context.Users.FirstOrDefaultAsync(x => x.Id == request.AuthorId);
+                command.Author = await _context.Users.FirstOrDefaultAsync(x => x.Id == command.AuthorId);
 
-                var verifyResult = await Verify(request);
+                var verifyResult = await Verify(command);
 
                 if (!verifyResult.Success)
-                {
                     return new Result<int>(ErrorType.BadRequest, string.Join(Environment.NewLine, verifyResult.Result));
-                }
 
-                return await CreateThread(request);
+                return await CreateThread(command);
             }
 
             private async Task<Result<int>> CreateThread(CreateThreadCommand request)
@@ -77,17 +75,17 @@ namespace CoyoteNETCore.Application.Threads.Commands
 
             public async Task<(bool Success, IEnumerable<string> Result)> Verify(CreateThreadCommand ValidationObject)
             {
-                var problems = new List<string>();
+                var errors = new List<string>();
 
                 if (ValidationObject == null)
                 {
-                    problems.Add("Data to create new thread was not received. Something went wrong.");
-                    return (true, problems);
+                    errors.Add("Data to create new thread was not received. Something went wrong.");
+                    return (true, errors);
                 }
 
                 if (ValidationObject.Author == null)
                 {
-                    problems.Add("Unable to determine User's profile");
+                    errors.Add("Unable to determine User's profile");
                 }
 
                 //if (ValidationObject.Author?.IsUserBanned ?? true)
@@ -97,17 +95,16 @@ namespace CoyoteNETCore.Application.Threads.Commands
 
                 if (!await _context.ThreadCategories.AnyAsync(c => c.Id == ValidationObject.ThreadCategoryId))
                 {
-                    problems.Add($"Thread category with an Id: '{ValidationObject.ThreadCategoryId}' does not exist.");
+                    errors.Add($"Thread category with an Id: '{ValidationObject.ThreadCategoryId}' does not exist.");
                 }
 
                 if (string.IsNullOrWhiteSpace(ValidationObject.Body))
                 {
-                    problems.Add("Thread cannot be empty.");
+                    errors.Add("Thread cannot be empty.");
                 }
 
-                return (!problems.Any(), problems);
+                return (errors.Count == 0, errors);
             }
-
         }
     }
 }
