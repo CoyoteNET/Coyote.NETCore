@@ -20,10 +20,10 @@ namespace CoyoteNETCore.DAL.Configuration
                 .WithMany(b => b.DownloadedBy)
                 .HasForeignKey(bc => bc.FileId);
 
-            builder
-                .HasOne(bc => bc.User)
-                .WithMany(c => c.DownloadedFilesLog)
-                .HasForeignKey(bc => bc.UserId);
+            //builder
+            //    .HasOne(bc => bc.User)
+            //    .WithMany(c => c.DownloadedFilesLog)
+            //    .HasForeignKey(bc => bc.UserId);
         }
     }
 }

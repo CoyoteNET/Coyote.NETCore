@@ -14,7 +14,7 @@ namespace CoyoteNETCore.Tests
         public UnitTest1()
         {
             var optionsBuilder = new DbContextOptionsBuilder<Context>();
-            optionsBuilder.UseInMemoryDatabase("database");
+            optionsBuilder.UseInMemoryDatabase(Guid.NewGuid().ToString());
             c = new Context(optionsBuilder.Options);
         }
 

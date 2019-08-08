@@ -14,6 +14,7 @@ using Swashbuckle.AspNetCore.Swagger;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Swashbuckle.AspNetCore.SwaggerUI;
 using MediatR;
+using CoyoteNETCore.Application.Threads.Commands;
 using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Identity;
 using CoyoteNETCore.Application.Interfaces;
@@ -32,7 +33,7 @@ namespace Coyote.NETCore
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDbContext<Context>(options =>
-                options.UseInMemoryDatabase(Configuration.GetConnectionString("Default")), ServiceLifetime.Transient);
+                options.UseSqlServer(Configuration.GetConnectionString("Default")), ServiceLifetime.Transient);
 
             services.AddMediatR(typeof(RegisterUserCommand).Assembly);
 
@@ -52,7 +53,8 @@ namespace Coyote.NETCore
                 c.SwaggerDoc("v1", new Info { Title = "Coyote API", Version = "v1" });
             });
 
-            services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+            services
+                .AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
                 .AddCookie(options =>
                 {
                     options.LoginPath = "/Account/LogIn";
@@ -64,7 +66,7 @@ namespace Coyote.NETCore
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, Context context)
         {
             // in order to setup this project easier
-           // context.Database.EnsureCreated();
+           context.Database.EnsureCreated();
 
             app.UseForwardedHeaders(new ForwardedHeadersOptions
             {
@@ -83,10 +85,9 @@ namespace Coyote.NETCore
             }
             
             app.UseSwagger();
-            
             app.UseSwaggerUI(c =>
             {
-                c.SwaggerEndpoint("/swagger/v1/swagger.json", "Coyote API V1");
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "Coyote API v1");
                 c.RoutePrefix = string.Empty;
                 c.DocExpansion(DocExpansion.None);
             });

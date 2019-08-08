@@ -1,14 +1,6 @@
-﻿using CoyoteNETCore.DAL;
-using CoyoteNETCore.Shared;
-using FluentValidation;
-using MediatR;
-using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
+﻿using FluentValidation;
 
-namespace CoyoteNETCore.Application.Thread.Command
+namespace CoyoteNETCore.Application.Threads.Commands
 {
     public class CreateThreadCommandValidation : AbstractValidator<CreateThreadCommand>
     {
@@ -21,6 +13,10 @@ namespace CoyoteNETCore.Application.Thread.Command
             RuleFor(x => x.Title)
                 .NotEmpty()
                 .WithMessage("Thread is required to have a non-empty title");
+
+            RuleFor(x => x.Body)
+                .NotEmpty()
+                .WithMessage("Thread is required to have a non-empty body");
         }
     }
 }

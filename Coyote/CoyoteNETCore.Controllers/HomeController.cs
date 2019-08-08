@@ -1,4 +1,4 @@
-﻿using CoyoteNETCore.Application.Thread.Command;
+﻿using CoyoteNETCore.Application.Threads.Commands;
 using CoyoteNETCore.Shared;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -18,10 +18,10 @@ namespace CoyoteNETCore.Controllers
         public async Task<IActionResult> SampleEndpoint()
         {
             // tests
-            var command = new CreateThreadCommand("Test", "test", new User("_", "_"));
+            var command = new CreateThreadCommand("Test", "test", 0, 0);
 
             var output = await Mediator.Send(command);
-            return StatusCode(200, new { output.Success, output.Result });
+            return StatusCode(200, new { output.IsSucceeded, output.Error });
         }
     }
 }

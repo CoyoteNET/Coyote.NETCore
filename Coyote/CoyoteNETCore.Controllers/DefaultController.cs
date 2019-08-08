@@ -1,7 +1,7 @@
-﻿using System;
-using CoyoteNETCore.Application;
-using MediatR;
+﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using System;
+using CoyoteNETCore.Application;
 
 namespace CoyoteNETCore.Controllers
 {
