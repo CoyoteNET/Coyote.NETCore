@@ -4,7 +4,7 @@ using System.Text;
 
 namespace CoyoteNETCore.Shared.RequestInput
 {
-    public class CreateThread
+    public class CreateThreadInput
     {
         public string Body { get; set; }
 
@@ -12,6 +12,6 @@ namespace CoyoteNETCore.Shared.RequestInput
 
         public string Tags { get; set; }
 
-        public int ThreadCategoryId { get; set; }
+        public int? ThreadCategoryId { get; set; }
     }
 }

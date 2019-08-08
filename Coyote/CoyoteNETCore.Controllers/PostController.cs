@@ -8,14 +8,14 @@ using System.Threading.Tasks;
 namespace CoyoteNETCore.Controllers
 {
     [Route("api/v1/[controller]")]
-    public class ThreadController : DefaultController
+    public class PostController : DefaultController
     {
-        public ThreadController(IMediator m) : base(m)
+        public PostController(IMediator m) : base(m)
         {
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateThread([FromBody] CreateThreadInput data)
+        public async Task<IActionResult> WritePost([FromBody] WritePostInput data)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
@@ -30,7 +30,7 @@ namespace CoyoteNETCore.Controllers
                 return BadRequest("Unable to determine User's profile");
             }
 
-            var command = new CreateThreadCommand(data.Body, data.Title, data.ThreadCategoryId.Value, id);
+            var command = new WritePostCommand(data.ThreadId.Value, data.Body, id);
 
             var result = await Mediator.Send(command);
 
@@ -38,14 +38,24 @@ namespace CoyoteNETCore.Controllers
         }
 
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetThread([FromRoute] int? id)
+        public async Task<IActionResult> EditPost([FromRoute] EditPostInput data)
         {
-            if (id == null)
-                return BadRequest("Incorrect Id.");
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
 
-            var query = new GetThreadQuery(id);
+            if (data == null)
+            {
+                return BadRequest("Received data is broken.");
+            }
 
-            var result = await Mediator.Send(query);
+            if (!int.TryParse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value, out var id))
+            {
+                return BadRequest("Unable to determine User's profile");
+            }
+
+            var command = new EditPostCommand(data.PostId.Value, data.Body, id);
+
+            var result = await Mediator.Send(command);
 
             return Json(result);
         }
