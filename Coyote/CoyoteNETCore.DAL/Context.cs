@@ -58,5 +58,7 @@ namespace CoyoteNETCore.DAL
         public DbSet<EmailLog> EmailLogs { get; set; }
 
         public DbSet<EmailMessageType> EmailMessageTypes { get; set; }
+
+        public DbSet<UserFile> DownloadFileLog { get; set; }
     }
 }

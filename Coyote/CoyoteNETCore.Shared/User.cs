@@ -31,7 +31,7 @@ namespace CoyoteNETCore.Shared
 
         public string PasswordHash { get; set; }
 
-        public string PasswordSalt { get; private set; }
+        public string PasswordSalt { get; set; }
 
         public File Avatar { get; set; }
 
@@ -71,6 +71,6 @@ namespace CoyoteNETCore.Shared
 
         public ICollection<Notification> Notifications { get; private set; } = new List<Notification>();
 
-        // public ICollection<UserFile> DownloadedFilesLog { get; private set;} = new List<UserFile>();
+        public ICollection<UserFile> DownloadedFilesLog { get; private set;} = new List<UserFile>();
     }
 }
