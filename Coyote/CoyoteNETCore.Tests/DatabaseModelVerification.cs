@@ -44,7 +44,7 @@ namespace CoyoteNETCore.Tests
         public async Task CreateUser_With_Avatar()
         {
             Assert.Empty(await c.Users.ToListAsync());
-            await c.Users.AddAsync(new User("test", "test", "test", "test")
+            await c.Users.AddAsync(new User("test", "test")
             {
                 
             });
@@ -61,11 +61,11 @@ namespace CoyoteNETCore.Tests
         [Fact]
         public async Task Database_subscription_test()
         {
-            var user = new User("a", "b", "c", "d");
+            var user = new User("a", "b");
             var section = new ForumSection("Tests");
             var category = new ThreadCategory("Test #1", "Test 1", section);
-            var thread1 = new Thread(category, "a,b,c,d,e", "Sample Title");
-            var thread2 = new Thread(category, "a,b,c,d,e", "Sample Title 2");
+            var thread1 = new Thread(category, "a,b,c,d,e", "Sample Title", user);
+            var thread2 = new Thread(category, "a,b,c,d,e", "Sample Title 2", user);
 
             thread1.Subscribers.Add(new SubscriptionThread(user));
             thread2.Subscribers.Add(new SubscriptionThread(user));
