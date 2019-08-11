@@ -11,31 +11,27 @@ using System.Threading.Tasks;
 
 namespace CoyoteNETCore.Application.Threads.Commands
 {
-    public class CreateThreadCommand : IRequest<Result<int>>
+    public class WritePostCommand : IRequest<Result<int>>
     {
-        public CreateThreadCommand(string body, string title, int categoryId, int authorId)
+        public WritePostCommand(int threadId, string body, int authorId)
         {
+            ThreadId = threadId;
             Body = body;
-            Title = title;
-            ThreadCategoryId = categoryId;
+            AuthorId = authorId;
             AuthorId = authorId;
         }
 
+        public int ThreadId { get; }
+
         public string Body { get; }
-
-        public string Title { get; }
-
-        public string Tags { get; }
 
         public User Author { get; set; }
 
         public int AuthorId { get; set; }
 
-        public int ThreadCategoryId { get; }
-
         public class Handler :
-            IRequestHandler<CreateThreadCommand, Result<int>>,
-            IBusinessLogicValidation<CreateThreadCommand>
+            IRequestHandler<WritePostCommand, Result<int>>,
+            IBusinessLogicValidation<WritePostCommand>
         {
             private readonly Context _context;
 
@@ -44,7 +40,7 @@ namespace CoyoteNETCore.Application.Threads.Commands
                 _context = context;
             }
 
-            public async Task<Result<int>> Handle(CreateThreadCommand command, CancellationToken cancellationToken)
+            public async Task<Result<int>> Handle(WritePostCommand command, CancellationToken cancellationToken)
             {
                 command.Author = await _context.Users.FirstOrDefaultAsync(x => x.Id == command.AuthorId);
 
@@ -53,27 +49,24 @@ namespace CoyoteNETCore.Application.Threads.Commands
                 if (!verifyResult.Success)
                     return new Result<int>(ErrorType.BadRequest, string.Join(Environment.NewLine, verifyResult.Result));
 
-                return await CreateThread(command);
+                return await WritePost(command);
             }
 
-            private async Task<Result<int>> CreateThread(CreateThreadCommand request)
+            private async Task<Result<int>> WritePost(WritePostCommand request)
             {
-                var category = await _context.ThreadCategories.FindAsync(request.ThreadCategoryId);
+                var thread = await _context
+                                    .Threads
+                                    .Include(x => x.Posts)
+                                    .FirstOrDefaultAsync(x => x.Id == request.ThreadId);
 
-                var thread = new Shared.Thread(category, request.Tags, request.Title, request.Author);
-
-                var first_post = new Post(request.Body, thread, request.Author);
-
-                thread.Posts.Add(first_post);
-
-                await _context.Threads.AddAsync(thread);
-
+                var post = new Post(request.Body, thread, request.Author);
+                thread.Posts.Add(post);
                 await _context.SaveChangesAsync();
 
                 return new Result<int>(thread.Id);
             }
 
-            public async Task<(bool Success, IEnumerable<string> Result)> Verify(CreateThreadCommand ValidationObject)
+            public async Task<(bool Success, IEnumerable<string> Result)> Verify(WritePostCommand ValidationObject)
             {
                 var errors = new List<string>();
 
@@ -88,19 +81,14 @@ namespace CoyoteNETCore.Application.Threads.Commands
                     errors.Add("Unable to determine User's profile");
                 }
 
-                //if (ValidationObject.Author?.IsUserBanned ?? true)
-                //{
-                //    problems.Add("Banned users are unable to create threads.");
-                //}
-
-                if (!await _context.ThreadCategories.AnyAsync(c => c.Id == ValidationObject.ThreadCategoryId))
+                if (!await _context.Threads.AnyAsync(c => c.Id == ValidationObject.ThreadId))
                 {
-                    errors.Add($"Thread category with an Id: '{ValidationObject.ThreadCategoryId}' does not exist.");
+                    errors.Add($"Thread with an Id: '{ValidationObject.ThreadId}' does not exist.");
                 }
 
                 if (string.IsNullOrWhiteSpace(ValidationObject.Body))
                 {
-                    errors.Add("Thread cannot be empty.");
+                    errors.Add("Post body cannot be empty.");
                 }
 
                 return (errors.Count == 0, errors);

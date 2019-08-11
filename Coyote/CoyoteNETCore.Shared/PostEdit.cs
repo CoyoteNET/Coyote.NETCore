@@ -11,7 +11,7 @@ namespace CoyoteNETCore.Shared
 
         public PostEdit(Post post, User editor)
         {
-            Post = post;
+            Post = post; // reference loop?????????????
             Editor = editor;
         }
 

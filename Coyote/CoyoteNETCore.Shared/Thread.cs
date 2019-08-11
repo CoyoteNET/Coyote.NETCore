@@ -7,7 +7,6 @@ namespace CoyoteNETCore.Shared
     {
         private Thread()
         {
-
         }
 
         public Thread(ThreadCategory category, string tags, string title, User author)

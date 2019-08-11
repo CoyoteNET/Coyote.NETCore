@@ -25,9 +25,6 @@ namespace CoyoteNETCore.Controllers
             {
                 case ErrorType.NotFound:
                     return NotFound(error.Description);
-                case ErrorType.BadRequest:
-                case ErrorType.AlreadyExists:
-                    return BadRequest(error.Description);
                 default:
                     return BadRequest(error.Description);
             }

@@ -21,7 +21,7 @@ namespace CoyoteNETCore.Tests
         {
             _client = factory.CreateClient();
             var optionsBuilder = new DbContextOptionsBuilder<Context>();
-            optionsBuilder.UseInMemoryDatabase("database");
+            optionsBuilder.UseInMemoryDatabase(Guid.NewGuid().ToString());
             context = new Context(optionsBuilder.Options);
         }
 
