@@ -5,29 +5,43 @@ using Xunit;
 using CoyoteNETCore.Shared;
 using System;
 using System.Linq;
+using Microsoft.Extensions.Configuration;
 
 namespace CoyoteNETCore.Tests
 {
     public class DatabaseModelVerification : IDisposable
     {
-        private readonly Context c;
+        private Context c;
 
         public DatabaseModelVerification()
         {
-            // AppVeyor:
-            var connString = @"Server=(local)\SQL2017;Database=CoyoteNET_TestDatabase;User ID=sa;Password=Password12!;";
-            // Local:
-            //var connString = @"Server=.\SQLExpress;Database=CoyoteNET_TestDatabase;Trusted_Connection=Yes;";
+            var config = new ConfigurationBuilder()
+                             .AddJsonFile("appsettings.json")
+                             .Build();
 
-            Console.WriteLine("Using CoyoteNET_TestDatabase");
+            try
+            {
+                SetupRealDb(config.GetConnectionString("AppVeyor"));
+            }
+            catch
+            {
+                SetupRealDb(config.GetConnectionString("TestDb"));
+            }
+        }
+
+        #pragma warning disable xUnit1013 // Public method should be marked as test
+        public void SetupRealDb(string conn)
+        {
+            Console.WriteLine($"Using CoyoteNET_TestDatabase {conn}");
             var optionsBuilder = new DbContextOptionsBuilder<Context>();
-            optionsBuilder.UseSqlServer(connString);
+            optionsBuilder.UseSqlServer(conn);
             c = new Context(optionsBuilder.Options);
+            c.Database.EnsureDeleted();
             c.Database.EnsureCreated();
         }
 
         [Fact]
-        public async Task Test1()
+        public async Task CreateUser_With_Avatar()
         {
             Assert.Empty(await c.Users.ToListAsync());
             await c.Users.AddAsync(new User("test", "test", "test", "test")

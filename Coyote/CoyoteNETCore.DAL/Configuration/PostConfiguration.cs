@@ -15,6 +15,8 @@ namespace CoyoteNETCore.DAL.Configuration
             builder.HasOne(x => x.Author);
             builder.HasMany(x => x.Comments);
             builder.HasMany(x => x.Editions);
+
+            builder.HasMany(x => x.Comments).WithOne(x => x.Post).HasForeignKey(x => x.PostId);
         }
     }
 }

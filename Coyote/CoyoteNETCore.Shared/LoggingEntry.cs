@@ -25,6 +25,8 @@ namespace CoyoteNETCore.Shared
 
         public DateTime OccuredAt { get; private set; } = DateTime.Now;
 
+        public int UserId { get; private set; }
+
         public User User { get; private set; }
 
         public bool Succeeded { get; private set; }
