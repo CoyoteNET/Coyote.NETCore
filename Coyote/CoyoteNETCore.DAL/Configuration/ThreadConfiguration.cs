@@ -15,6 +15,8 @@ namespace CoyoteNETCore.DAL.Configuration
             builder.HasOne(x => x.Author);
             builder.HasOne(x => x.Category);
             builder.HasMany(x => x.ThreadEdits);
+            builder.HasMany(x => x.Posts);
+            builder.HasMany(x => x.Subscribers);
         }
     }
 }

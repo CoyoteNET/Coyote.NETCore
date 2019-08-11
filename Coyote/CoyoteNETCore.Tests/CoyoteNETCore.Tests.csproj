@@ -11,6 +11,7 @@
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" Version="2.2.0" />
     <PackageReference Include="Microsoft.AspNetCore.TestHost" Version="2.2.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="2.2.3" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="2.2.0" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.9.0" />
     <PackageReference Include="Selenium.WebDriver" Version="3.141.0" />
     <PackageReference Include="Shouldly" Version="3.0.2" />
@@ -23,6 +24,10 @@
     <ProjectReference Include="..\CoyoteNETCore.Application\CoyoteNETCore.Application.csproj" />
     <ProjectReference Include="..\CoyoteNETCore.Runner\Coyote.NETCore.csproj" />
     <ProjectReference Include="..\CoyoteNETCore.Shared\CoyoteNETCore.Shared.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="..\CoyoteNETCore.Runner\appsettings.json" CopyToOutputDirectory="Always" />
   </ItemGroup>
 
 </Project>

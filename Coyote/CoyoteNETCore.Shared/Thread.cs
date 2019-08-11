@@ -33,5 +33,9 @@ namespace CoyoteNETCore.Shared
         public ICollection<Post> Posts { get; private set; } = new List<Post>();
 
         public ICollection<ThreadEdit> ThreadEdits { get; private set; } = new List<ThreadEdit>();
+
+        public ICollection<Post> Posts { get; private set; } = new List<Post>();
+
+        public ICollection<SubscriptionThread> Subscribers { get; private set; } = new List<SubscriptionThread>();
     }
 }

@@ -22,6 +22,8 @@ namespace CoyoteNETCore.Shared
 
         public string Content { get; set; }
 
+        public int PostId { get; private set; }
+
         public Post Post { get; private set; }
 
         public User Author { get; private set; }

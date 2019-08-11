@@ -30,6 +30,7 @@ namespace CoyoteNETCore.Shared
         public DateTime BroadcastedAt { get; private set; } = DateTime.Now;
 
         public User Sender { get; private set; }
+
         public User Receiver { get; private set; }
     }
 }

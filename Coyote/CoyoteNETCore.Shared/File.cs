@@ -28,6 +28,6 @@ namespace CoyoteNETCore.Shared
 
         public User UploadedBy { get; private set; }
 
-        public ICollection<UserFile> DownloadedBy { get; private set; } = new List<UserFile>();
+        // public ICollection<UserFile> DownloadedBy { get; private set; } = new List<UserFile>();
     }
 }
