@@ -1,5 +1,8 @@
-﻿using CoyoteNETCore.DAL;
+﻿using CoyoteNETCore.Application.Interfaces;
+using CoyoteNETCore.DAL;
 using CoyoteNETCore.Shared;
+using CoyoteNETCore.Shared.Entities;
+using CoyoteNETCore.Shared.ResultHandling;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -13,10 +16,11 @@ namespace CoyoteNETCore.Application.Threads.Commands
 {
     public class CreateThreadCommand : IRequest<Result<int>>
     {
-        public CreateThreadCommand(string body, string title, int categoryId, int authorId)
+        public CreateThreadCommand(string body, string title, int categoryId, string tags, int authorId)
         {
             Body = body;
             Title = title;
+            Tags = tags;
             ThreadCategoryId = categoryId;
             AuthorId = authorId;
         }
@@ -60,7 +64,7 @@ namespace CoyoteNETCore.Application.Threads.Commands
             {
                 var category = await _context.ThreadCategories.FindAsync(request.ThreadCategoryId);
 
-                var thread = new Shared.Thread(category, request.Tags, request.Title, request.Author);
+                var thread = new Shared.Entities.Thread(category, request.Tags, request.Title, request.Author);
 
                 var first_post = new Post(request.Body, thread, request.Author);
 

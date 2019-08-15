@@ -1,5 +1,6 @@
 ﻿using System.Threading.Tasks;
 using CoyoteNETCore.Application.Account.Commands;
+using CoyoteNETCore.Shared.RequestInput;
 using MediatR;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Mvc;
@@ -15,19 +16,29 @@ namespace CoyoteNETCore.Controllers
         }
 
         [HttpPost("Register")]
-        public async Task<IActionResult> Register([FromBody]RegisterUserCommand command)
+        public async Task<IActionResult> Register([FromBody]RegisterInput input)
         {
+            if (input == null)
+                return BadRequest("The received data is broken");
+
+            var command = new RegisterUserCommand(input?.Username, input?.Email, input?.Password);
+
             var result = await Mediator.Send(command);
 
-            return CreateResponse(result, () => Ok(result.Value));
+            return CreateResponse(result, Ok(result.Value));
         }
 
         [HttpPost("LogIn")]
-        public async Task<IActionResult> Login([FromBody]LoginUserCommand command)
+        public async Task<IActionResult> Login([FromBody]LoginInput input)
         {
+            if (input == null)
+                return BadRequest("The received data is broken");
+
+            var command = new LoginUserCommand(input?.Username, input?.Password);
+
             var result = await Mediator.Send(command);
 
-            return CreateResponse(result, NoContent);
+            return CreateResponse(result, Json(result.Value));
         }
 
         [HttpGet("GitHub/LogIn")]

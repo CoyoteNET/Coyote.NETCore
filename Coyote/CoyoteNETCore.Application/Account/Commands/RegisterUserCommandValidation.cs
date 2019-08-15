@@ -6,7 +6,7 @@ namespace CoyoteNETCore.Application.Account.Commands
     {
         public RegisterUserCommandValidation()
         {
-            RuleFor(x => x.Name).NotEmpty().WithMessage("Name is required.");
+            RuleFor(x => x.Username).NotEmpty().WithMessage("Name is required.");
             RuleFor(x => x.Email).NotEmpty().WithMessage("Email is required.")
                                  .EmailAddress().WithMessage("A valid email is required.");
             RuleFor(x => x.Password).NotEmpty().WithMessage("Password is required.")

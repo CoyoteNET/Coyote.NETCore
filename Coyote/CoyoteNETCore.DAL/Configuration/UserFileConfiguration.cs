@@ -1,4 +1,5 @@
 ﻿using CoyoteNETCore.Shared;
+using CoyoteNETCore.Shared.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using System;
