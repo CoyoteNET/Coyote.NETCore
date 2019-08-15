@@ -6,13 +6,13 @@ namespace CoyoteNETCore.Shared.RequestInput
 {
     public class LoginInput
     {
-        public LoginInput(string name, string password)
+        public LoginInput(string username, string password)
         {
-            Name = name;
+            Username = username;
             Password = password;
         }
 
-        public string Name { get; set; }
+        public string Username { get; set; }
 
         public string Password { get; set; }
     }

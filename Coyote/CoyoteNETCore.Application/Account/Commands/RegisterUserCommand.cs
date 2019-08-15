@@ -15,14 +15,14 @@ namespace CoyoteNETCore.Application.Account.Commands
 {
     public class RegisterUserCommand : IRequest<Result<JsonWebToken>>
     {
-        public RegisterUserCommand(string name, string email, string password)
+        public RegisterUserCommand(string username, string email, string password)
         {
-            Name = name;
+            Username = username;
             Email = email;
             Password = password;
         }
 
-        public string Name { get; set; }
+        public string Username { get; set; }
 
         public string Email { get; set; }
 
@@ -52,7 +52,7 @@ namespace CoyoteNETCore.Application.Account.Commands
                     return new Result<JsonWebToken>(ErrorType.BadRequest, verifyResult.Error.ErrorMessage);
                 }
 
-                var user = new User(request.Name, request.Email);
+                var user = new User(request.Username, request.Email);
                 user.PasswordHash = _passwordHasher.HashPassword(user, request.Password);
 
                 _db.Users.Add(user);
@@ -67,12 +67,12 @@ namespace CoyoteNETCore.Application.Account.Commands
 
             private async Task<Result<T>> Verify<T>(RegisterUserCommand request)
             {
-                if (string.IsNullOrWhiteSpace(request.Name) || string.IsNullOrWhiteSpace(request.Email) ||string.IsNullOrWhiteSpace(request.Password))
+                if (string.IsNullOrWhiteSpace(request.Username) || string.IsNullOrWhiteSpace(request.Email) ||string.IsNullOrWhiteSpace(request.Password))
                 {
                     return new Result<T>(ErrorType.BadRequest, "Every field - name, email and password has to have a value.");
                 }
 
-                if (await _db.Users.AnyAsync(x => x.Username.ToLower() == request.Name.ToLower()))
+                if (await _db.Users.AnyAsync(x => x.Username.ToLower() == request.Username.ToLower()))
                 {
                     return new Result<T>(ErrorType.AlreadyExists, "An account with the given username already exists.");
                 }

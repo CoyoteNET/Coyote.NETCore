@@ -34,7 +34,7 @@ namespace CoyoteNETCore.Controllers
             if (input == null)
                 return BadRequest("The received data is broken");
 
-            var command = new LoginUserCommand(input?.Name, input?.Password);
+            var command = new LoginUserCommand(input?.Username, input?.Password);
 
             var result = await Mediator.Send(command);
 
