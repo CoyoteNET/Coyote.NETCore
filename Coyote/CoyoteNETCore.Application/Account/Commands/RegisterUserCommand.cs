@@ -49,7 +49,7 @@ namespace CoyoteNETCore.Application.Account.Commands
 
                 if (verifyResult != null) //TODO: ugly
                 {
-                    return new Result<JsonWebToken>(ErrorType.Unauthorized, "Unauthorized");
+                    return new Result<JsonWebToken>(ErrorType.BadRequest, verifyResult.Error.ErrorMessage);
                 }
 
                 var user = new User(request.Name, request.Email);

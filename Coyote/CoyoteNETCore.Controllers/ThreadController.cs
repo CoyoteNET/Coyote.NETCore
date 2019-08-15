@@ -27,7 +27,7 @@ namespace CoyoteNETCore.Controllers
                 return BadRequest("Received data is broken.");
             }
 
-            if (!int.TryParse(User.FindFirst(ClaimTypes.NameIdentifier).Value, out var id))
+            if (!int.TryParse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value, out var id))
             {
                 return BadRequest("Unable to determine User's profile");
             }
