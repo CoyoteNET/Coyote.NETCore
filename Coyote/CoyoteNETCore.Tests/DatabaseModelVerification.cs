@@ -6,6 +6,7 @@ using CoyoteNETCore.Shared;
 using System;
 using System.Linq;
 using Microsoft.Extensions.Configuration;
+using CoyoteNETCore.Shared.Entities;
 
 namespace CoyoteNETCore.Tests
 {
@@ -95,7 +96,7 @@ namespace CoyoteNETCore.Tests
             Assert.True(context.Threads.FirstOrDefault(x => x.Title == "Sample Title").Subscribers.Any());
             Assert.True(context.Threads.FirstOrDefault(x => x.Title == "Sample Title 2").Subscribers.Any());
             Assert.True(context.Threads.FirstOrDefault(x => x.Title == "Sample Title").Posts.Count() == 2);
-            Assert.Equal(2, context.Posts.Include(x => x.Subscribers).Where(x => x.Subscribers.Any(z => z.Subscriber.Name == "a")).Count());
+            Assert.Equal(2, context.Posts.Include(x => x.Subscribers).Where(x => x.Subscribers.Any(z => z.Subscriber.Username == "a")).Count());
         }
 
         [Fact]

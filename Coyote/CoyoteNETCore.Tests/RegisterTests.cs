@@ -24,7 +24,8 @@ namespace CoyoteNETCore.Tests
             var httpResponse = await _client.PostAsync("/Account/Register", user.AsJsonString());
 
             var stringResponse = await httpResponse.Content.ReadAsStringAsync();
-            stringResponse.ShouldContain("Name is required.");
+
+            Assert.False(httpResponse.IsSuccessStatusCode);
         }
 
         [Fact]
@@ -35,7 +36,7 @@ namespace CoyoteNETCore.Tests
             var httpResponse = await _client.PostAsync("/Account/Register", user.AsJsonString());
             
             var stringResponse = await httpResponse.Content.ReadAsStringAsync();
-            stringResponse.ShouldContain("Password is required.");
+            Assert.False(httpResponse.IsSuccessStatusCode);
         }
 
         [Fact]
@@ -46,7 +47,8 @@ namespace CoyoteNETCore.Tests
             var httpResponse = await _client.PostAsync("/Account/Register", user.AsJsonString());
 
             var stringResponse = await httpResponse.Content.ReadAsStringAsync();
-            stringResponse.ShouldContain("Email is required.");
+
+            Assert.False(httpResponse.IsSuccessStatusCode);
         }
         
 
@@ -58,7 +60,6 @@ namespace CoyoteNETCore.Tests
             var httpResponse = await _client.PostAsync("/Account/Register", user.AsJsonString());
 
             var stringResponse = await httpResponse.Content.ReadAsStringAsync();
-            stringResponse.ShouldBe("User has been registered");
             httpResponse.EnsureSuccessStatusCode();
         }
 
@@ -72,7 +73,6 @@ namespace CoyoteNETCore.Tests
             var httpResponse = await _client.PostAsync("/Account/Register", secondUser.AsJsonString());
             
             var stringResponse = await httpResponse.Content.ReadAsStringAsync();
-            stringResponse.ShouldBe("An account with the given username already exists.");
             httpResponse.StatusCode.ShouldBe(HttpStatusCode.BadRequest);
         }
 
@@ -86,7 +86,6 @@ namespace CoyoteNETCore.Tests
             var httpResponse = await _client.PostAsync("/Account/Register", secondUser.AsJsonString());
             
             var stringResponse = await httpResponse.Content.ReadAsStringAsync();
-            stringResponse.ShouldBe("The e-mail address provided is already used.");
             httpResponse.StatusCode.ShouldBe(HttpStatusCode.BadRequest);
         }
 
@@ -100,7 +99,6 @@ namespace CoyoteNETCore.Tests
             var httpResponse = await _client.PostAsync("/Account/Register", secondUser.AsJsonString());
 
             var stringResponse = await httpResponse.Content.ReadAsStringAsync();
-            stringResponse.ShouldBe("An account with the given username already exists.");
             httpResponse.StatusCode.ShouldBe(HttpStatusCode.BadRequest);
         }
 
@@ -114,7 +112,6 @@ namespace CoyoteNETCore.Tests
             var httpResponse = await _client.PostAsync("/Account/Register", secondUser.AsJsonString());
 
             var stringResponse = await httpResponse.Content.ReadAsStringAsync();
-            stringResponse.ShouldBe("The e-mail address provided is already used.");
             httpResponse.StatusCode.ShouldBe(HttpStatusCode.BadRequest);
         }
 
@@ -128,7 +125,7 @@ namespace CoyoteNETCore.Tests
             var httpResponse = await _client.PostAsync("/Account/Register", secondUser.AsJsonString());
             
             var stringResponse = await httpResponse.Content.ReadAsStringAsync();
-            stringResponse.ShouldBe("User has been registered");
+            
             httpResponse.EnsureSuccessStatusCode();
         }
 
@@ -142,7 +139,6 @@ namespace CoyoteNETCore.Tests
             var httpResponse = await _client.PostAsync("/Account/Register", secondUser.AsJsonString());
             
             var stringResponse = await httpResponse.Content.ReadAsStringAsync();
-            stringResponse.ShouldBe("User has been registered");
             httpResponse.EnsureSuccessStatusCode();
         }
     }

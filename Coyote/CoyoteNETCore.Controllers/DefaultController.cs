@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using System;
 using CoyoteNETCore.Application;
+using CoyoteNETCore.Shared.ResultHandling;
 
 namespace CoyoteNETCore.Controllers
 {
@@ -13,10 +14,10 @@ namespace CoyoteNETCore.Controllers
         {
             Mediator = mediator;
         }
-
-        protected IActionResult CreateResponse<T>(Result<T> result, Func<IActionResult> actionSucceeded)
+            
+        protected IActionResult CreateResponse<T>(Result<T> result, IActionResult actionSucceeded)
         {
-            return !result.IsSucceeded ? HandleError(result.Error) : actionSucceeded();
+            return !result.IsSucceeded ? HandleError(result.Error) : actionSucceeded;
         }
 
         private IActionResult HandleError(Error error)
@@ -24,11 +25,10 @@ namespace CoyoteNETCore.Controllers
             switch (error.ErrorType)
             {
                 case ErrorType.NotFound:
-                    return NotFound(error.Description);
+                    return NotFound(error.ErrorMessage);
                 default:
-                    return BadRequest(error.Description);
+                    return BadRequest(error.ErrorMessage);
             }
         }
     }
 }
-    

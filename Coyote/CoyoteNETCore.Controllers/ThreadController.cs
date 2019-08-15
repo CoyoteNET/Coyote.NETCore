@@ -2,6 +2,8 @@
 using CoyoteNETCore.Shared.RequestInput;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using System.IdentityModel.Tokens.Jwt;
+using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 
@@ -25,12 +27,12 @@ namespace CoyoteNETCore.Controllers
                 return BadRequest("Received data is broken.");
             }
 
-            if (!int.TryParse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value, out var id))
+            if (!int.TryParse(User.FindFirst(ClaimTypes.NameIdentifier).Value, out var id))
             {
                 return BadRequest("Unable to determine User's profile");
             }
 
-            var command = new CreateThreadCommand(data.Body, data.Title, data.ThreadCategoryId.Value, id);
+            var command = new CreateThreadCommand(data.Body, data.Title, data.ThreadCategoryId.Value, data.Tags, id);
 
             var result = await Mediator.Send(command);
 
@@ -44,6 +46,16 @@ namespace CoyoteNETCore.Controllers
                 return BadRequest("Incorrect Id.");
 
             var query = new GetThreadQuery(id);
+
+            var result = await Mediator.Send(query);
+
+            return Json(result);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetThreads()
+        {
+            var query = new GetThreadsQuery();
 
             var result = await Mediator.Send(query);
 

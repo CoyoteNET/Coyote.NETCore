@@ -9,6 +9,7 @@ using CoyoteNETCore.Application.Threads.Commands;
 using Coyote.NETCore;
 using System.Net.Http;
 using System.Linq;
+using CoyoteNETCore.Shared.Entities;
 
 namespace CoyoteNETCore.Tests
 {
@@ -41,7 +42,7 @@ namespace CoyoteNETCore.Tests
             await context.AddAsync(user);
             await context.SaveChangesAsync();
 
-            var command = new CreateThreadCommand("Body", "Title", threadCategory.Id, user.Id);
+            var command = new CreateThreadCommand("Body", "Title", threadCategory.Id, null, user.Id);
             var result = await handler.Handle(command, new CancellationToken());
 
             Assert.True(result.IsSucceeded);
@@ -61,7 +62,7 @@ namespace CoyoteNETCore.Tests
             await context.AddAsync(user);
             await context.SaveChangesAsync();
 
-            var command = new CreateThreadCommand("Body", "Title", threadCategory.Id, user.Id);
+            var command = new CreateThreadCommand("Body", "Title", threadCategory.Id, null, user.Id);
             var result = await handler.Handle(command, new CancellationToken());
 
             Assert.False(result.IsSucceeded);
@@ -75,7 +76,7 @@ namespace CoyoteNETCore.Tests
             var handler = new CreateThreadCommand.Handler(context);
             var threadCategory = new ThreadCategory("test", "test", new ForumSection("test section"));
 
-            var command = new CreateThreadCommand("Body", "Title", threadCategory.Id, 5);
+            var command = new CreateThreadCommand("Body", "Title", threadCategory.Id, "abc", 5);
             var result = await handler.Handle(command, new CancellationToken());
 
             Assert.False(result.IsSucceeded);
@@ -94,7 +95,7 @@ namespace CoyoteNETCore.Tests
                 await context.AddAsync(user);
                 await context.SaveChangesAsync();
 
-            var payload = new CreateThreadCommand("Body", "Title", threadCategory.Id, user.Id);
+            var payload = new CreateThreadCommand("Body", "Title", threadCategory.Id, null, user.Id);
 
             var result = await handler.Handle(payload, new CancellationToken());
 

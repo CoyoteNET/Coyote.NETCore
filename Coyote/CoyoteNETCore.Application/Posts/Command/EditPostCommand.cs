@@ -1,5 +1,8 @@
-﻿using CoyoteNETCore.DAL;
+﻿using CoyoteNETCore.Application.Interfaces;
+using CoyoteNETCore.DAL;
 using CoyoteNETCore.Shared;
+using CoyoteNETCore.Shared.Entities;
+using CoyoteNETCore.Shared.ResultHandling;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using System;

@@ -1,4 +1,6 @@
 ﻿using CoyoteNETCore.DAL;
+using CoyoteNETCore.Shared.ResultHandling;
+using CoyoteNETCore.Shared.Entities;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -6,10 +8,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using CoyoteNETCore.Application.Interfaces;
 
 namespace CoyoteNETCore.Application.Threads.Commands
 {
-    public class GetThreadQuery : IRequest<Result<Shared.Thread>>
+    public class GetThreadQuery : IRequest<Result<Shared.Entities.Thread>>
     {
         public GetThreadQuery(int? id)
         {
@@ -19,7 +22,7 @@ namespace CoyoteNETCore.Application.Threads.Commands
         public int? Id { get; }
 
         public class Handler :
-            IRequestHandler<GetThreadQuery, Result<Shared.Thread>>,
+            IRequestHandler<GetThreadQuery, Result<Shared.Entities.Thread>>,
             IBusinessLogicValidation<GetThreadQuery>
         {
             private readonly Context _context;
@@ -29,12 +32,12 @@ namespace CoyoteNETCore.Application.Threads.Commands
                 _context = context;
             }
 
-            public async Task<Result<Shared.Thread>> Handle(GetThreadQuery request, CancellationToken cancellationToken)
+            public async Task<Result<Shared.Entities.Thread>> Handle(GetThreadQuery request, CancellationToken cancellationToken)
             {
                 var verify = await Verify(request);
 
                 if (!verify.Success)
-                    return new Result<Shared.Thread>(ErrorType.BadRequest, verify.Result);
+                    return new Result<Shared.Entities.Thread>(ErrorType.BadRequest, verify.Result);
 
                 var thread = await _context
                                    .Threads
@@ -44,9 +47,9 @@ namespace CoyoteNETCore.Application.Threads.Commands
                                    .FirstOrDefaultAsync(x => x.Id == request.Id);
 
                 if (thread == null)
-                    return new Result<Shared.Thread>(ErrorType.NotFound, $"Thread with an id {request.Id} does not exist");
+                    return new Result<Shared.Entities.Thread>(ErrorType.NotFound, $"Thread with an id {request.Id} does not exist");
 
-                return new Result<Shared.Thread>(thread);
+                return new Result<Shared.Entities.Thread>(thread);
             }
 
             public async Task<(bool Success, IEnumerable<string> Result)> Verify(GetThreadQuery ValidationObject)

@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using System.Reflection;
 using CoyoteNETCore.Shared;
+using CoyoteNETCore.Shared.Entities;
 
 namespace CoyoteNETCore.DAL
 {

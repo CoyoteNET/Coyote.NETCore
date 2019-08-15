@@ -9,6 +9,7 @@ using CoyoteNETCore.Application.Threads.Commands;
 using Coyote.NETCore;
 using System.Net.Http;
 using System.Linq;
+using CoyoteNETCore.Shared.Entities;
 
 namespace CoyoteNETCore.Tests
 {
@@ -41,7 +42,7 @@ namespace CoyoteNETCore.Tests
             await context.AddAsync(user);
             await context.SaveChangesAsync();
 
-            var thread_command = new CreateThreadCommand("Body", "Title", threadCategory.Id, user.Id);
+            var thread_command = new CreateThreadCommand("Body", "Title", threadCategory.Id, null, user.Id);
             var thread_result = await thread_handler.Handle(thread_command, new CancellationToken());
 
             Assert.True(thread_result.IsSucceeded);
@@ -75,7 +76,7 @@ namespace CoyoteNETCore.Tests
             await context.AddAsync(user);
             await context.SaveChangesAsync();
 
-            var thread_command = new CreateThreadCommand("Body", "Title", threadCategory.Id, user.Id);
+            var thread_command = new CreateThreadCommand("Body", "Title", threadCategory.Id, "asd", user.Id);
             var thread_result = await thread_handler.Handle(thread_command, new CancellationToken());
 
             Assert.True(thread_result.IsSucceeded);
