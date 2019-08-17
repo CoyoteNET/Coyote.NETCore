@@ -22,6 +22,9 @@ namespace Coyote.NETCore
         {
             // https://exceptionnotfound.net/using-middleware-to-log-requests-and-responses-in-asp-net-core/
             var request = await FormatRequest(context.Request);
+            Console.WriteLine(request);
+            Console.WriteLine();
+
             var originalBodyStream = context.Response.Body;
             using (var responseBody = new MemoryStream())
             {
@@ -29,9 +32,7 @@ namespace Coyote.NETCore
                 await _next(context);
                 var response = await FormatResponse(context.Response);
                 await responseBody.CopyToAsync(originalBodyStream);
-                Console.WriteLine(response);
             }
-            Console.WriteLine(request);
         }
 
         private async Task<string> FormatRequest(HttpRequest request)
@@ -56,12 +57,14 @@ namespace Coyote.NETCore
             if (removePassword)
             {
                 const string json_property_name = "Password\":\"";
-                var indexOfPassword = bodyAsText.IndexOf(json_property_name) + json_property_name.Length;
-                var nextIndex = bodyAsText.IndexOf('"', indexOfPassword);
+                var indexOfPassword = bodyAsText.IndexOf(json_property_name);
 
-                if (indexOfPassword != -1 && nextIndex != -1)
+                if (indexOfPassword != -1)
                 {
-                    bodyAsText = bodyAsText.ReplaceAt(indexOfPassword, nextIndex-indexOfPassword, "redacted");
+                    var nextIndex = bodyAsText.IndexOf('"', indexOfPassword);
+                    
+                    if (nextIndex != -1)
+                        bodyAsText = bodyAsText.ReplaceAt(indexOfPassword + json_property_name.Length, nextIndex-indexOfPassword, "redacted");
                 }
             }
 
