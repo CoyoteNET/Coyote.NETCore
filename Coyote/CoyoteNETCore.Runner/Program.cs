@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Logging;
 
 namespace Coyote.NETCore
 {
@@ -12,6 +13,10 @@ namespace Coyote.NETCore
 
         public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
             WebHost.CreateDefaultBuilder(args)
-                .UseStartup<Startup>();
+            .ConfigureLogging((context, logging) =>
+            {
+                logging.ClearProviders();
+            })
+            .UseStartup<Startup>();
     }
 }

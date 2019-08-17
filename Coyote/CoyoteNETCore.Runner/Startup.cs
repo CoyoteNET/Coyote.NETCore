@@ -79,7 +79,7 @@ namespace Coyote.NETCore
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, Context context)
         {
             // in order to setup this project easier
-           context.Database.EnsureCreated();
+            context.Database.EnsureCreated();
 
             app.UseForwardedHeaders(new ForwardedHeadersOptions
             {
@@ -106,7 +106,7 @@ namespace Coyote.NETCore
             });
 
             //app.UseHttpsRedirection();
-
+            app.UseMiddleware<RequestResponseLoggingMiddleware>();
             app.UseAuthentication();
             app.UseMvc();
         }
