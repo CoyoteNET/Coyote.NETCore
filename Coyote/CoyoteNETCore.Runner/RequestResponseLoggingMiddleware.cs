@@ -38,7 +38,12 @@ namespace Coyote.NETCore
         private async Task<string> FormatRequest(HttpRequest request)
         {
             request.EnableRewind();
-            var buffer = new byte[Convert.ToInt32(request.ContentLength)];
+
+            // In HTTP2 ContentLength is optional.
+            // https://svn.tools.ietf.org/svn/wg/httpbis/specs/rfc7230.html#header.content-length
+            // https://svn.tools.ietf.org/svn/wg/httpbis/specs/rfc7230.html#message.body.length
+
+            var buffer = new byte[Convert.ToInt32(request.ContentLength ?? request.Body.Length)];
             await request.Body.ReadAsync(buffer, 0, buffer.Length);
             var bodyAsText = Encoding.UTF8.GetString(buffer);
             request.Body.Position = 0; // allows framework to process this body once again
@@ -61,10 +66,11 @@ namespace Coyote.NETCore
 
                 if (indexOfPassword != -1)
                 {
+                    indexOfPassword += json_property_name.Length;
                     var nextIndex = bodyAsText.IndexOf('"', indexOfPassword);
                     
                     if (nextIndex != -1)
-                        bodyAsText = bodyAsText.ReplaceAt(indexOfPassword + json_property_name.Length, nextIndex-indexOfPassword, "redacted");
+                        bodyAsText = bodyAsText.ReplaceAt(indexOfPassword, nextIndex-indexOfPassword, "redacted");
                 }
             }
 
