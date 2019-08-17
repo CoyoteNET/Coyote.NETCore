@@ -43,7 +43,7 @@ namespace Coyote.NETCore
             // https://svn.tools.ietf.org/svn/wg/httpbis/specs/rfc7230.html#header.content-length
             // https://svn.tools.ietf.org/svn/wg/httpbis/specs/rfc7230.html#message.body.length
 
-            var buffer = new byte[Convert.ToInt32(request.ContentLength ?? request.Body.Length)];
+            var buffer = new byte[Convert.ToInt32(request.ContentLength ?? (request.Body?.Length ?? 0))];
             await request.Body.ReadAsync(buffer, 0, buffer.Length);
             var bodyAsText = Encoding.UTF8.GetString(buffer);
             request.Body.Position = 0; // allows framework to process this body once again
