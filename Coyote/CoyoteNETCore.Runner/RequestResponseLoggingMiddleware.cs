@@ -53,8 +53,13 @@ namespace Coyote.NETCore
             return $"{request.Scheme.ToUpper()}/{request.Method} {request.Host}{request.Path} {request.QueryString} {bodyAsText}";
         }
 
-        private static string PreventPasswordsFromBeingLogged(PathString requestPath, string bodyAsText)
+        public static string PreventPasswordsFromBeingLogged(PathString requestPath, string bodyAsText)
         {
+            // this method will not work if there's more than 1 'Password' being sent.
+
+            if (bodyAsText is null)
+                return "";
+
             var protected_endspoints = new[] { "/Account/Login", "/Account/Register" };
 
             var removePassword = protected_endspoints.Any(x => requestPath.Value.StartsWith(x, StringComparison.OrdinalIgnoreCase));
