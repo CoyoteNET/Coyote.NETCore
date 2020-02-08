@@ -1,0 +1,11 @@
+version: '3.4'
+
+services:    
+  coyote.web:
+    image: ${DOCKER_REGISTRY-}coyoteweb
+    build:
+      context: .
+      dockerfile: CoyoteNET/Dockerfile
+    ports:
+      - "5000:80"
+    

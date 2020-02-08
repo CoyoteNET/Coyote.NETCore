@@ -19,19 +19,15 @@ namespace CoyoteNET
 
         public async Task Invoke(HttpContext context)
         {
-          //  await _next(context);
-            // return;
-            // https://exceptionnotfound.net/using-middleware-to-log-requests-and-responses-in-asp-net-core/
             var request = await FormatRequest(context.Request);
             Console.WriteLine(request);
-            Console.WriteLine();
 
             var originalBodyStream = context.Response.Body;
             using (var responseBody = new MemoryStream())
             {
                 context.Response.Body = responseBody;
                 await _next(context);
-                var response = await FormatResponse(context.Response);
+                await FormatResponse(context.Response);
                 await responseBody.CopyToAsync(originalBodyStream);
             }
         }
@@ -39,10 +35,6 @@ namespace CoyoteNET
         private async Task<string> FormatRequest(HttpRequest request)
         {
             request.EnableBuffering();
-
-            // In HTTP2 ContentLength is optional.
-            // https://svn.tools.ietf.org/svn/wg/httpbis/specs/rfc7230.html#header.content-length
-            // https://svn.tools.ietf.org/svn/wg/httpbis/specs/rfc7230.html#message.body.length
 
             using var data = new StreamReader(request.Body, Encoding.UTF8, false, 1024, true);
             var body = await data.ReadToEndAsync();
@@ -55,22 +47,21 @@ namespace CoyoteNET
         public static string PreventPasswordsFromBeingLogged(PathString requestPath, string bodyAsText)
         {
             // this method will not work if there's more than 1 'Password' being sent.
-
             if (bodyAsText is null)
                 return "";
 
-            var protected_endspoints = new[] { "/Account/Login", "/Account/Register" };
+            var protectedEndpoints = new[] { "/Account/Login", "/Account/Register" };
 
-            var removePassword = protected_endspoints.Any(x => requestPath.Value.StartsWith(x, StringComparison.OrdinalIgnoreCase));
+            var removePassword = protectedEndpoints.Any(x => requestPath.Value.StartsWith(x, StringComparison.OrdinalIgnoreCase));
 
             if (removePassword)
             {
-                const string json_property_name = "Password\":\"";
-                var indexOfPassword = bodyAsText.IndexOf(json_property_name);
+                const string jsonPropertyName = "Password\":\"";
+                var indexOfPassword = bodyAsText.IndexOf(jsonPropertyName, StringComparison.Ordinal);
 
                 if (indexOfPassword != -1)
                 {
-                    indexOfPassword += json_property_name.Length;
+                    indexOfPassword += jsonPropertyName.Length;
                     var nextIndex = bodyAsText.IndexOf('"', indexOfPassword);
                     
                     if (nextIndex != -1)
