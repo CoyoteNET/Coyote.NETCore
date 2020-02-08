@@ -14,7 +14,7 @@ namespace CoyoteNET.Tests.Infrastructure
             {
                 services.AddDbContext<Context>(options =>
                 {
-                    options.UseInMemoryDatabase("InMemoryDbForTesting");
+                    options.UseInMemoryDatabase("InMemoryHostDataBase");
                 });
 
                 using var scope = services.BuildServiceProvider().CreateScope();
