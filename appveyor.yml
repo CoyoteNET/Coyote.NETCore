@@ -6,5 +6,5 @@ build_script:
   - dotnet build
 
 test_script:
-  - cd CoyoteNETCore.Tests
+  - cd CoyoteNET.Tests
   - dotnet test
