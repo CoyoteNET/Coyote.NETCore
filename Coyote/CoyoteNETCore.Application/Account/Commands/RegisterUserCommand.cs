@@ -67,11 +67,6 @@ namespace CoyoteNETCore.Application.Account.Commands
 
             private async Task<Result<T>> Verify<T>(RegisterUserCommand request)
             {
-                if (string.IsNullOrWhiteSpace(request.Username) || string.IsNullOrWhiteSpace(request.Email) ||string.IsNullOrWhiteSpace(request.Password))
-                {
-                    return new Result<T>(ErrorType.BadRequest, "Every field - name, email and password has to have a value.");
-                }
-
                 if (await _db.Users.AnyAsync(x => x.Username.ToLower() == request.Username.ToLower()))
                 {
                     return new Result<T>(ErrorType.AlreadyExists, "An account with the given username already exists.");

@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.28705.295
 MinimumVisualStudioVersion = 15.0.26124.0
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Coyote.NETCore", "CoyoteNETCore.Runner\Coyote.NETCore.csproj", "{2CC31A68-1E0D-476B-967D-5AF34AFE9C6A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Coyote.NETCore", "CoyoteNETCore\Coyote.NETCore.csproj", "{2CC31A68-1E0D-476B-967D-5AF34AFE9C6A}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CoyoteNETCore.Shared", "CoyoteNETCore.Shared\CoyoteNETCore.Shared.csproj", "{E737B464-C0C8-4B5C-9E61-7F842FE1A393}"
 EndProject

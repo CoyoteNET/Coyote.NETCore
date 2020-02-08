@@ -1,12 +1,12 @@
 ﻿using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Security.Claims;
+using System.Text.Json;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.OAuth;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Newtonsoft.Json.Linq;
 
 namespace Coyote.NETCore
 {
@@ -41,7 +41,7 @@ namespace Coyote.NETCore
                             HttpCompletionOption.ResponseHeadersRead, context.HttpContext.RequestAborted);
                         response.EnsureSuccessStatusCode();
 
-                        var user = JObject.Parse(await response.Content.ReadAsStringAsync());
+                        var user = JsonSerializer.Deserialize<JsonElement>(await response.Content.ReadAsStringAsync());
 
                         context.RunClaimActions(user);
                     }

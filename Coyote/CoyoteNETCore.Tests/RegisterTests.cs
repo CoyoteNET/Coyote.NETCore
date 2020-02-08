@@ -2,6 +2,7 @@
 using System.Net.Http;
 using System.Threading.Tasks;
 using Coyote.NETCore;
+using CoyoteNETCore.Tests.Infrastructure;
 using Shouldly;
 using Xunit;
 
@@ -19,7 +20,7 @@ namespace CoyoteNETCore.Tests
         [Fact]
         public async Task CreateUser_NameIsEmpty_UnsuccessfullyCreated()
         {
-            var user = new {Password = "test1234test", Email = "test@test.pl" };
+            var user = new { Password = "test1234test", Email = "test@test.pl" };
 
             var httpResponse = await _client.PostAsync("/Account/Register", user.AsJsonString());
 
@@ -42,7 +43,7 @@ namespace CoyoteNETCore.Tests
         [Fact]
         public async Task CreateUser_EmailIsEmpty_UnsuccessfullyCreated()
         {
-            var user = new { Username = "test", Password = "test1234test"};
+            var user = new { Username = "test", Password = "test1234test" };
 
             var httpResponse = await _client.PostAsync("/Account/Register", user.AsJsonString());
 

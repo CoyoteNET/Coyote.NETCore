@@ -2,25 +2,19 @@ using Microsoft.EntityFrameworkCore;
 using System.Threading.Tasks;
 using CoyoteNETCore.DAL;
 using Xunit;
-using CoyoteNETCore.Shared;
 using System;
 using System.Threading;
 using CoyoteNETCore.Application.Threads.Commands;
-using Coyote.NETCore;
-using System.Net.Http;
-using System.Linq;
 using CoyoteNETCore.Shared.Entities;
 
 namespace CoyoteNETCore.Tests
 {
-    public class ThreadTests : IDisposable, IClassFixture<CustomWebApplicationFactory<Startup>>
+    public class ThreadTests : IDisposable
     {
-        private readonly HttpClient _client;
         private readonly Context context;
 
-        public ThreadTests(CustomWebApplicationFactory<Startup> factory)
+        public ThreadTests()
         {
-            _client = factory.CreateClient();
             var optionsBuilder = new DbContextOptionsBuilder<Context>();
             optionsBuilder.UseInMemoryDatabase(Guid.NewGuid().ToString());
             context = new Context(optionsBuilder.Options);

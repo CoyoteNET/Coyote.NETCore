@@ -2,64 +2,43 @@ using Microsoft.EntityFrameworkCore;
 using System.Threading.Tasks;
 using CoyoteNETCore.DAL;
 using Xunit;
-using CoyoteNETCore.Shared;
 using System;
 using System.Linq;
-using Microsoft.Extensions.Configuration;
 using CoyoteNETCore.Shared.Entities;
 
 namespace CoyoteNETCore.Tests
 {
     public class DatabaseModelVerification : IDisposable
     {
-        private Context context;
+        private readonly Context _context;
 
         public void Dispose()
         {
-            context.Database.EnsureDeleted();
+            _context.Database.EnsureDeleted();
         }
 
         public DatabaseModelVerification()
         {
-            var config = new ConfigurationBuilder()
-                             .AddJsonFile("appsettings.json")
-                             .Build();
-
-            try
-            {
-                SetupRealDb(config.GetConnectionString("AppVeyor"));
-            }
-            catch
-            {
-                SetupRealDb(config.GetConnectionString("TestDb"));
-            }
-        }
-
-        #pragma warning disable xUnit1013 // Public method should be marked as test
-        public void SetupRealDb(string conn)
-        {
-            Console.WriteLine($"Using CoyoteNET_TestDatabase {conn}");
             var optionsBuilder = new DbContextOptionsBuilder<Context>();
-            optionsBuilder.UseSqlServer(conn);
-            context = new Context(optionsBuilder.Options);
-            context.Database.EnsureDeleted();
-            context.Database.EnsureCreated();
+            optionsBuilder.UseInMemoryDatabase("InMemoryDbForTesting");
+            _context = new Context(optionsBuilder.Options);
+            _context.Database.EnsureCreated();
         }
 
         [Fact]
         public async Task CreateUser_With_Avatar()
         {
-            Assert.Empty(await context.Users.ToListAsync());
-            await context.Users.AddAsync(new User("test", "test")
+            Assert.Empty(await _context.Users.ToListAsync());
+            await _context.Users.AddAsync(new User("test", "test")
             {
                 
             });
 
-            await context.SaveChangesAsync();
-            await context.Files.AddAsync(new File("asd.jpg", "asd", await context.Users.FirstAsync()));
-            await context.SaveChangesAsync();
+            await _context.SaveChangesAsync();
+            await _context.Files.AddAsync(new File("asd.jpg", "asd", await _context.Users.FirstAsync()));
+            await _context.SaveChangesAsync();
 
-            var user = await context.Users.Include(x => x.Avatar).FirstAsync();
+            var user = await _context.Users.Include(x => x.Avatar).FirstAsync();
 
             Assert.Equal("asd.jpg", user.Avatar.UserFileName);
         }
@@ -85,41 +64,41 @@ namespace CoyoteNETCore.Tests
             post1.Subscribers.Add(new SubscriptionPost(user));
             post2.Subscribers.Add(new SubscriptionPost(user));
 
-            context.Threads.Add(thread1);
-            context.Threads.Add(thread2);
-            await context.SaveChangesAsync();
+            _context.Threads.Add(thread1);
+            _context.Threads.Add(thread2);
+            await _context.SaveChangesAsync();
 
-            Assert.Equal(1, await context.Users.CountAsync());
-            Assert.Equal("Tests", context.ForumSections.FirstOrDefault().Name);
-            Assert.Equal("Test #1", context.ThreadCategories.FirstOrDefault().Name);
-            Assert.Equal(2, await context.Threads.CountAsync());
-            Assert.True(context.Threads.FirstOrDefault(x => x.Title == "Sample Title").Subscribers.Any());
-            Assert.True(context.Threads.FirstOrDefault(x => x.Title == "Sample Title 2").Subscribers.Any());
-            Assert.True(context.Threads.FirstOrDefault(x => x.Title == "Sample Title").Posts.Count() == 2);
-            Assert.Equal(2, context.Posts.Include(x => x.Subscribers).Where(x => x.Subscribers.Any(z => z.Subscriber.Username == "a")).Count());
+            Assert.Equal(1, await _context.Users.CountAsync());
+            Assert.Equal("Tests", _context.ForumSections.FirstOrDefault().Name);
+            Assert.Equal("Test #1", _context.ThreadCategories.FirstOrDefault().Name);
+            Assert.Equal(2, await _context.Threads.CountAsync());
+            Assert.True(_context.Threads.FirstOrDefault(x => x.Title == "Sample Title").Subscribers.Any());
+            Assert.True(_context.Threads.FirstOrDefault(x => x.Title == "Sample Title 2").Subscribers.Any());
+            Assert.True(_context.Threads.FirstOrDefault(x => x.Title == "Sample Title").Posts.Count() == 2);
+            Assert.Equal(2, _context.Posts.Include(x => x.Subscribers).Where(x => x.Subscribers.Any(z => z.Subscriber.Username == "a")).Count());
         }
 
         [Fact]
         public async Task Relation_Between_File_User_UserFile()
         {
-            await context.Files.AddAsync(new File("asd.jpg", "asd", new User("test", "test"){}));
-            await context.SaveChangesAsync();
+            await _context.Files.AddAsync(new File("asd.jpg", "asd", new User("test", "test"){}));
+            await _context.SaveChangesAsync();
 
-            var user = context.Users.First();
-            user.DownloadedFilesLog.Add(new UserFile(user, context.Files.First()));
+            var user = _context.Users.First();
+            user.DownloadedFilesLog.Add(new UserFile(user, _context.Files.First()));
 
-            await context.SaveChangesAsync();
+            await _context.SaveChangesAsync();
 
             Assert.True(user.DownloadedFilesLog.Count == 1);
 
-            context.DownloadFileLog.Remove(context.DownloadFileLog.First());
+            _context.DownloadFileLog.Remove(_context.DownloadFileLog.First());
 
-            await context.SaveChangesAsync();
+            await _context.SaveChangesAsync();
 
-            Assert.True(context.Files.Count() == 1);
-            Assert.True(context.Users.Count() == 1);
-            Assert.True(context.Users.First().DownloadedFilesLog.Count == 0);
-            Assert.True(context.DownloadFileLog.Count() == 0);
+            Assert.True(_context.Files.Count() == 1);
+            Assert.True(_context.Users.Count() == 1);
+            Assert.True(_context.Users.First().DownloadedFilesLog.Count == 0);
+            Assert.True(_context.DownloadFileLog.Count() == 0);
         }
     }
 }

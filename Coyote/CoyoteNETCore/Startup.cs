@@ -3,23 +3,22 @@ using CoyoteNETCore.Application.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpOverrides;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using CoyoteNETCore.Controllers;
 using CoyoteNETCore.DAL;
-using Swashbuckle.AspNetCore.Swagger;
-using Microsoft.AspNetCore.Authentication.Cookies;
 using Swashbuckle.AspNetCore.SwaggerUI;
 using MediatR;
 using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Identity;
 using CoyoteNETCore.Application.Interfaces;
 using CoyoteNETCore.Shared.Entities;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using Microsoft.OpenApi.Models;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.Extensions.Hosting;
 
 namespace Coyote.NETCore
 {
@@ -40,15 +39,16 @@ namespace Coyote.NETCore
             services.AddMediatR(typeof(RegisterUserCommand).Assembly);
 
             services
-                .AddMvc(o =>
+                .AddControllers(o =>
                 {
                     o.Filters.Add(typeof(ExceptionMiddleware));
                 })
+                .AddNewtonsoftJson()
                 .AddApplicationPart(typeof(HomeController).Assembly)
                 .AddControllersAsServices()
-                .SetCompatibilityVersion(CompatibilityVersion.Version_2_2)
                 .AddFluentValidation(c => c.RegisterValidatorsFromAssemblyContaining(typeof(RegisterUserCommandValidation)));
 
+            services.AddHealthChecks();
             services.AddTransient<INotificationService, NotificationService>();
             services.AddTransient<IPasswordHasher<User>, PasswordHasher<User>>();
             services.AddTransient<JwtService>();
@@ -56,7 +56,7 @@ namespace Coyote.NETCore
 
             services.AddSwaggerGen(c =>
             {
-                c.SwaggerDoc("v1", new Info { Title = "Coyote API", Version = "v1" });
+                c.SwaggerDoc("v1", new OpenApiInfo { Title = "Coyote API", Version = "v1" });
             });
 
             services
@@ -76,17 +76,15 @@ namespace Coyote.NETCore
                 });
         }
 
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env, Context context)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, Context context)
         {
             // in order to setup this project easier
-            context.Database.EnsureCreated();
+            // context.Database.EnsureCreated();
 
             app.UseForwardedHeaders(new ForwardedHeadersOptions
             {
                 ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
             });
-
-            app.UseAuthentication();
 
             if (env.IsDevelopment())
             {
@@ -96,7 +94,8 @@ namespace Coyote.NETCore
             {
                 app.UseHsts();
             }
-            
+
+            app.UseRouting();
             app.UseSwagger();
             app.UseSwaggerUI(c =>
             {
@@ -105,10 +104,14 @@ namespace Coyote.NETCore
                 c.DocExpansion(DocExpansion.None);
             });
 
-            //app.UseHttpsRedirection();
             app.UseMiddleware<RequestResponseLoggingMiddleware>();
             app.UseAuthentication();
-            app.UseMvc();
+
+            app.UseEndpoints(endpoints =>
+            {
+                endpoints.MapControllers();
+                endpoints.MapHealthChecks("/health");
+            });
         }
     }
 }

@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace CoyoteNETCore.Tests
+namespace CoyoteNETCore.Tests.Infrastructure
 {
     public class CustomWebApplicationFactory<TStartup> : WebApplicationFactory<TStartup> where TStartup : class
     {
@@ -12,25 +12,14 @@ namespace CoyoteNETCore.Tests
         {
             builder.ConfigureServices(services =>
             {
-                var serviceProvider = new ServiceCollection()
-                    .AddEntityFrameworkInMemoryDatabase()
-                    .BuildServiceProvider();
-
                 services.AddDbContext<Context>(options =>
                 {
                     options.UseInMemoryDatabase("InMemoryDbForTesting");
-                    options.UseInternalServiceProvider(serviceProvider);
                 });
 
-                var sp = services.BuildServiceProvider();
-
-                using (var scope = sp.CreateScope())
-                {
-                    var scopedServices = scope.ServiceProvider;
-                    var db = scopedServices.GetRequiredService<Context>();
-
-                    db.Database.EnsureCreated();
-                }
+                using var scope = services.BuildServiceProvider().CreateScope();
+                var db = scope.ServiceProvider.GetRequiredService<Context>();
+                db.Database.EnsureCreated();
             });
         }
     }

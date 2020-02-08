@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Http.Internal;
 using System;
 using System.IO;
 using System.Linq;
@@ -20,6 +19,8 @@ namespace Coyote.NETCore
 
         public async Task Invoke(HttpContext context)
         {
+          //  await _next(context);
+            // return;
             // https://exceptionnotfound.net/using-middleware-to-log-requests-and-responses-in-asp-net-core/
             var request = await FormatRequest(context.Request);
             Console.WriteLine(request);
@@ -37,18 +38,16 @@ namespace Coyote.NETCore
 
         private async Task<string> FormatRequest(HttpRequest request)
         {
-            request.EnableRewind();
+            request.EnableBuffering();
 
             // In HTTP2 ContentLength is optional.
             // https://svn.tools.ietf.org/svn/wg/httpbis/specs/rfc7230.html#header.content-length
             // https://svn.tools.ietf.org/svn/wg/httpbis/specs/rfc7230.html#message.body.length
 
-            var buffer = new byte[Convert.ToInt32(request.ContentLength ?? (request.Body?.Length ?? 0))];
-            await request.Body.ReadAsync(buffer, 0, buffer.Length);
-            var bodyAsText = Encoding.UTF8.GetString(buffer);
-            request.Body.Position = 0; // allows framework to process this body once again
-
-            bodyAsText = PreventPasswordsFromBeingLogged(request.Path, bodyAsText);
+            using var data = new StreamReader(request.Body, Encoding.UTF8, false, 1024, true);
+            var body = await data.ReadToEndAsync();
+            request.Body.Seek(0, SeekOrigin.Begin);
+            var bodyAsText = PreventPasswordsFromBeingLogged(request.Path, body);
 
             return $"{request.Scheme.ToUpper()}/{request.Method} {request.Host}{request.Path} {request.QueryString} {bodyAsText}";
         }

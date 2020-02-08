@@ -1,19 +1,13 @@
 ﻿using MediatR;
-using System.Collections.Generic;
-using System.Security.Claims;
 using System.Threading;
 using System.Threading.Tasks;
 using CoyoteNETCore.DAL;
-using CoyoteNETCore.Shared;
-using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using CoyoteNETCore.Shared.ResultHandling;
 using CoyoteNETCore.Shared.Entities;
 using CoyoteNETCore.Application.Services;
-using System;
 using CoyoteNETCore.Shared.Auth;
 
 namespace CoyoteNETCore.Application.Account.Commands
@@ -34,14 +28,12 @@ namespace CoyoteNETCore.Application.Account.Commands
         {
             private readonly Context _db;
             private readonly IPasswordHasher<User> _passwordHasher;
-            private readonly IHttpContextAccessor _httpAccessor;
             private readonly JwtService _jwt;
 
-            public Handler(Context db, IPasswordHasher<User> passwordHasher, IHttpContextAccessor httpAccessor, JwtService jwt)
+            public Handler(Context db, IPasswordHasher<User> passwordHasher, JwtService jwt)
             {
                 _db = db;
                 _passwordHasher = passwordHasher;
-                _httpAccessor = httpAccessor;
                 _jwt = jwt;
             }
 

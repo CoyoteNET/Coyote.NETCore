@@ -1,11 +1,8 @@
 ﻿using CoyoteNETCore.DAL;
 using CoyoteNETCore.Shared.ResultHandling;
-using CoyoteNETCore.Shared.Entities;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
-using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using CoyoteNETCore.Application.Interfaces;

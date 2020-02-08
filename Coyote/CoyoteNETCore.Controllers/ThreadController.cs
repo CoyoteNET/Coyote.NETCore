@@ -2,8 +2,6 @@
 using CoyoteNETCore.Shared.RequestInput;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using System.IdentityModel.Tokens.Jwt;
-using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 
