@@ -6,6 +6,11 @@ namespace CoyoteNETCore.Shared.RequestInput
 {
     public class LoginInput
     {
+        private LoginInput()
+        {
+
+        }
+
         public LoginInput(string username, string password)
         {
             Username = username;

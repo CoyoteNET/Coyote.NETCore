@@ -97,7 +97,6 @@ namespace Coyote.NETCore
             });
 
             //app.UseHttpsRedirection();
-            app.UseMiddleware<RequestResponseLoggingMiddleware>();
             app.UseAuthentication();
             app.UseRouting();
             app.UseEndpoints(endpoints => endpoints.MapControllers());

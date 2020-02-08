@@ -6,6 +6,11 @@ namespace CoyoteNETCore.Shared.RequestInput
 {
     public class CreateThreadInput
     {
+        private CreateThreadInput()
+        {
+
+        }
+
         public CreateThreadInput(string body, string title, string tags, int threadCategoryId)
         {
             Body = body;
