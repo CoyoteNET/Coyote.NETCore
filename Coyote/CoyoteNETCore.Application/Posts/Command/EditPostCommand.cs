@@ -63,7 +63,7 @@ namespace CoyoteNETCore.Application.Threads.Commands
                 //post.Editions.Add(new PostEdit(post, request.Editor)); // reference loop?????????????
 
                 post.Content = request.Content;
-                
+
                 await _context.SaveChangesAsync();
 
                 return new Result<int>(post.Id);

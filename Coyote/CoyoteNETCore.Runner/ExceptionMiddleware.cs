@@ -13,7 +13,7 @@ namespace Coyote.NETCore
             // temporary logs :>
             Console.WriteLine(ex.Message);
             Console.WriteLine(ex.StackTrace);
-            
+
             context.Result = new BadRequestObjectResult("Something went terribly wrong");
         }
     }

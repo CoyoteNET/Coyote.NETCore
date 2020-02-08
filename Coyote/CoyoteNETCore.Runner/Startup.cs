@@ -88,7 +88,6 @@ namespace Coyote.NETCore
             {
                 app.UseHsts();
             }
-            
             app.UseSwagger();
             app.UseSwaggerUI(c =>
             {
@@ -100,6 +99,7 @@ namespace Coyote.NETCore
             //app.UseHttpsRedirection();
             app.UseMiddleware<RequestResponseLoggingMiddleware>();
             app.UseAuthentication();
+            app.UseRouting();
             app.UseEndpoints(endpoints => endpoints.MapControllers());
         }
     }

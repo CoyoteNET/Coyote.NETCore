@@ -36,7 +36,7 @@ namespace Coyote.NETCore
 
         private async Task<string> FormatRequest(HttpRequest request)
         {
-            // request.EnableRewind();
+            request.EnableBuffering();
 
             // In HTTP2 ContentLength is optional.
             // https://svn.tools.ietf.org/svn/wg/httpbis/specs/rfc7230.html#header.content-length

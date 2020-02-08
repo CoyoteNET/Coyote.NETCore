@@ -40,7 +40,7 @@ namespace CoyoteNETCore.Application.Account.Commands
                 _db = db;
                 _mediator = mediator;
                 _passwordHasher = passwordHasher;
-                _jwt = jwt; 
+                _jwt = jwt;
             }
 
             public async Task<Result<JsonWebToken>> Handle(RegisterUserCommand request, CancellationToken cancellationToken)
