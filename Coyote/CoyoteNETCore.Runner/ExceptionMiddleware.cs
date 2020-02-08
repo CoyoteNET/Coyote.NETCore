@@ -6,7 +6,6 @@ namespace Coyote.NETCore
 {
     public class ExceptionMiddleware : IExceptionFilter
     {
-
         public void OnException(ExceptionContext context)
         {
             var ex = context.Exception;

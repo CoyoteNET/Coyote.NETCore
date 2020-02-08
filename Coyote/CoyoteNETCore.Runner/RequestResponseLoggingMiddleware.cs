@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Http.Internal;
 using System;
 using System.IO;
 using System.Linq;
@@ -37,7 +36,7 @@ namespace Coyote.NETCore
 
         private async Task<string> FormatRequest(HttpRequest request)
         {
-            request.EnableRewind();
+            // request.EnableRewind();
 
             // In HTTP2 ContentLength is optional.
             // https://svn.tools.ietf.org/svn/wg/httpbis/specs/rfc7230.html#header.content-length
@@ -73,7 +72,7 @@ namespace Coyote.NETCore
                 {
                     indexOfPassword += json_property_name.Length;
                     var nextIndex = bodyAsText.IndexOf('"', indexOfPassword);
-                    
+
                     if (nextIndex != -1)
                         bodyAsText = bodyAsText.ReplaceAt(indexOfPassword, nextIndex-indexOfPassword, "redacted");
                 }

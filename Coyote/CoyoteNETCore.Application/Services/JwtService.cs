@@ -22,6 +22,9 @@ namespace CoyoteNETCore.Application.Services
 
         public JsonWebToken BuildToken(User user)
         {
+            if (user == null)
+                throw new ArgumentNullException(nameof(user));
+
             var claims = new[]
             {
                 new Claim(JwtRegisteredClaimNames.Sub, user.Id.ToString()),

@@ -2,6 +2,10 @@ services:
   - mssql2017
   
 build_script:
+  - ps: "[Net.ServicePointManager]::SecurityProtocol = 'Tls12'"
+  - ps: Invoke-WebRequest https://dotnetwebsite.azurewebsites.net/download/dotnet-core/scripts/v1/dotnet-install.ps1 -OutFile .\dotnet-install.ps1
+  - ps: if ((-Not (Test-Path .\dotnet\dotnet.exe)) -or (((.\dotnet\dotnet.exe --version) -Join '') -ne $Env:_DOTNET_VERSION)) { .\dotnet-install.ps1 -Version $Env:_DOTNET_VERSION -InstallDir .tmp\dotnet } else { $Env:path = $Env:APPVEYOR_BUILD_FOLDER + "\.\dotnet\dotnet.exe;" + $Env:path }
+  - dotnet --version
   - cd Coyote
   - dotnet build
 

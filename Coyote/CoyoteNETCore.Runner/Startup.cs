@@ -3,23 +3,22 @@ using CoyoteNETCore.Application.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpOverrides;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
+using Microsoft.EntityFrameworkCore;
 using CoyoteNETCore.Controllers;
 using CoyoteNETCore.DAL;
-using Swashbuckle.AspNetCore.Swagger;
-using Microsoft.AspNetCore.Authentication.Cookies;
 using Swashbuckle.AspNetCore.SwaggerUI;
 using MediatR;
 using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Identity;
 using CoyoteNETCore.Application.Interfaces;
 using CoyoteNETCore.Shared.Entities;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.OpenApi.Models;
 
 namespace Coyote.NETCore
 {
@@ -40,13 +39,9 @@ namespace Coyote.NETCore
             services.AddMediatR(typeof(RegisterUserCommand).Assembly);
 
             services
-                .AddMvc(o =>
-                {
-                    o.Filters.Add(typeof(ExceptionMiddleware));
-                })
+                .AddMvc(o => o.Filters.Add(typeof(ExceptionMiddleware)))
                 .AddApplicationPart(typeof(HomeController).Assembly)
                 .AddControllersAsServices()
-                .SetCompatibilityVersion(CompatibilityVersion.Version_2_2)
                 .AddFluentValidation(c => c.RegisterValidatorsFromAssemblyContaining(typeof(RegisterUserCommandValidation)));
 
             services.AddTransient<INotificationService, NotificationService>();
@@ -54,10 +49,7 @@ namespace Coyote.NETCore
             services.AddTransient<JwtService>();
             services.AddHttpContextAccessor();
 
-            services.AddSwaggerGen(c =>
-            {
-                c.SwaggerDoc("v1", new Info { Title = "Coyote API", Version = "v1" });
-            });
+            services.AddSwaggerGen(c => c.SwaggerDoc("v1", new OpenApiInfo { Title = "Coyote API", Version = "v1" }));
 
             services
                 .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
@@ -76,7 +68,7 @@ namespace Coyote.NETCore
                 });
         }
 
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env, Context context)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, Context context)
         {
             // in order to setup this project easier
             context.Database.EnsureCreated();
@@ -108,7 +100,7 @@ namespace Coyote.NETCore
             //app.UseHttpsRedirection();
             app.UseMiddleware<RequestResponseLoggingMiddleware>();
             app.UseAuthentication();
-            app.UseMvc();
+            app.UseEndpoints(endpoints => endpoints.MapControllers());
         }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Security.Claims;
+using System.Text.Json;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.OAuth;
 using Microsoft.AspNetCore.Http;
@@ -40,9 +41,8 @@ namespace Coyote.NETCore
                         var response = await context.Backchannel.SendAsync(request,
                             HttpCompletionOption.ResponseHeadersRead, context.HttpContext.RequestAborted);
                         response.EnsureSuccessStatusCode();
-
-                        var user = JObject.Parse(await response.Content.ReadAsStringAsync());
-
+                        var str = await response.Content.ReadAsStringAsync();
+                        var user = JsonSerializer.Deserialize<JsonElement>(str);
                         context.RunClaimActions(user);
                     }
                 };

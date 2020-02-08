@@ -34,14 +34,12 @@ namespace CoyoteNETCore.Application.Account.Commands
         {
             private readonly Context _db;
             private readonly IPasswordHasher<User> _passwordHasher;
-            private readonly IHttpContextAccessor _httpAccessor;
             private readonly JwtService _jwt;
 
-            public Handler(Context db, IPasswordHasher<User> passwordHasher, IHttpContextAccessor httpAccessor, JwtService jwt)
+            public Handler(Context db, IPasswordHasher<User> passwordHasher, JwtService jwt)
             {
                 _db = db;
                 _passwordHasher = passwordHasher;
-                _httpAccessor = httpAccessor;
                 _jwt = jwt;
             }
 

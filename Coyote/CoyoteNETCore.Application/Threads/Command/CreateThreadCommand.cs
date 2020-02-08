@@ -50,6 +50,9 @@ namespace CoyoteNETCore.Application.Threads.Commands
 
             public async Task<Result<int>> Handle(CreateThreadCommand command, CancellationToken cancellationToken)
             {
+                if (command == null)
+                    throw new ArgumentNullException(nameof(command));
+
                 command.Author = await _context.Users.FirstOrDefaultAsync(x => x.Id == command.AuthorId);
 
                 var verifyResult = await Verify(command);
