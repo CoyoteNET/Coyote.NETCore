@@ -19,17 +19,13 @@ namespace CoyoteNET
 
         public async Task Invoke(HttpContext context)
         {
-            var request = await FormatRequest(context.Request);
-            Console.WriteLine(request);
-
+            Console.WriteLine(await FormatRequest(context.Request));
             var originalBodyStream = context.Response.Body;
-            using (var responseBody = new MemoryStream())
-            {
-                context.Response.Body = responseBody;
-                await _next(context);
-                await FormatResponse(context.Response);
-                await responseBody.CopyToAsync(originalBodyStream);
-            }
+            await using var responseBody = new MemoryStream();
+            context.Response.Body = responseBody;
+            await _next(context);
+            Console.WriteLine(await FormatResponse(context.Response));
+            await responseBody.CopyToAsync(originalBodyStream);
         }
 
         private async Task<string> FormatRequest(HttpRequest request)

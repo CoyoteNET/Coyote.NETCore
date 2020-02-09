@@ -18,12 +18,7 @@ namespace CoyoteNET.Controllers
         [HttpPost("Register")]
         public async Task<IActionResult> Register([FromBody]RegisterInput input)
         {
-            if (input == null)
-                return BadRequest("The received data is broken");
-
-            var command = new RegisterUserCommand(input?.Username, input?.Email, input?.Password);
-
-            var result = await Mediator.Send(command);
+            var result = await Mediator.Send(new RegisterUserCommand(input.Username, input.Email, input.Password));
 
             return CreateResponse(result, Ok(result.Value));
         }
@@ -31,12 +26,7 @@ namespace CoyoteNET.Controllers
         [HttpPost("LogIn")]
         public async Task<IActionResult> Login([FromBody]LoginInput input)
         {
-            if (input == null)
-                return BadRequest("The received data is broken");
-
-            var command = new LoginUserCommand(input?.Username, input?.Password);
-
-            var result = await Mediator.Send(command);
+            var result = await Mediator.Send(new LoginUserCommand(input.Username, input.Password));
 
             return CreateResponse(result, Json(result.Value));
         }
