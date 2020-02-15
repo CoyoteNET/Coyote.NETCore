@@ -1,4 +1,5 @@
-﻿using CoyoteNET.Application.Account.Commands;
+﻿using System;
+using CoyoteNET.Application.Account.Commands;
 using CoyoteNET.Application.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -18,6 +19,7 @@ using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using Microsoft.OpenApi.Models;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Hosting;
 
 namespace CoyoteNET
@@ -33,11 +35,11 @@ namespace CoyoteNET
 
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContext<Context>(options =>
-                options.UseSqlServer(Configuration.GetConnectionString("Default")), ServiceLifetime.Transient);
+            var connectionString = Configuration.GetConnectionString("Default");
+            Retry.Do(() => CheckDataBaseConnection(connectionString), TimeSpan.FromSeconds(15), 5);
+            services.AddDbContext<Context>(options => options.UseSqlServer(connectionString), ServiceLifetime.Transient);
 
             services.AddMediatR(typeof(RegisterUserCommand).Assembly);
-
             services
                 .AddControllers(o =>
                 {
@@ -46,7 +48,7 @@ namespace CoyoteNET
                 .AddNewtonsoftJson()
                 .AddApplicationPart(typeof(HomeController).Assembly)
                 .AddControllersAsServices()
-                .AddFluentValidation(c => c.RegisterValidatorsFromAssemblyContaining(typeof(RegisterUserCommandValidation)));
+                .AddFluentValidation(c => c.RegisterValidatorsFromAssemblyContaining(typeof(RegisterInputValidation)));
 
             services.AddHealthChecks();
             services.AddTransient<INotificationService, NotificationService>();
@@ -79,7 +81,7 @@ namespace CoyoteNET
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, Context context)
         {
             // in order to setup this project easier
-            // context.Database.EnsureCreated();
+            context.Database.EnsureCreated();
 
             app.UseForwardedHeaders(new ForwardedHeadersOptions
             {
@@ -112,6 +114,12 @@ namespace CoyoteNET
                 endpoints.MapControllers();
                 endpoints.MapHealthChecks("/health");
             });
+        }
+        private static void CheckDataBaseConnection(string connectionString)
+        {
+            using var conn = new SqlConnection(connectionString);
+            conn.Open();
+            conn.Close();
         }
     }
 }
