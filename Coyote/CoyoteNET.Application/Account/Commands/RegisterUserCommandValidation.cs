@@ -1,11 +1,10 @@
-﻿using CoyoteNET.Shared.RequestInput;
-using FluentValidation;
+﻿using FluentValidation;
 
 namespace CoyoteNET.Application.Account.Commands
 {
-    public class RegisterInputValidation : AbstractValidator<RegisterInput>
+    public class RegisterUserCommandValidation : AbstractValidator<RegisterUserCommand>
     {
-        public RegisterInputValidation()
+        public RegisterUserCommandValidation()
         {
             RuleFor(x => x.Username).NotEmpty().WithMessage("Name is required.");
             RuleFor(x => x.Email).NotEmpty().WithMessage("Email is required.")

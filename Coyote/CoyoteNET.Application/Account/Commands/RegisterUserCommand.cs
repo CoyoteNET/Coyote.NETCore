@@ -3,6 +3,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using CoyoteNET.Application.Services;
 using CoyoteNET.DAL;
+using CoyoteNET.Shared;
 using CoyoteNET.Shared.Auth;
 using CoyoteNET.Shared.Entities;
 using CoyoteNET.Shared.ResultHandling;

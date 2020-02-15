@@ -2,6 +2,7 @@
 using System.Threading;
 using System.Threading.Tasks;
 using CoyoteNET.DAL;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using CoyoteNET.Shared.ResultHandling;

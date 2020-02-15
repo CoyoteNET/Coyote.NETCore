@@ -46,7 +46,7 @@ namespace CoyoteNET
                 .AddNewtonsoftJson()
                 .AddApplicationPart(typeof(HomeController).Assembly)
                 .AddControllersAsServices()
-                .AddFluentValidation(c => c.RegisterValidatorsFromAssemblyContaining(typeof(RegisterInputValidation)));
+                .AddFluentValidation(c => c.RegisterValidatorsFromAssemblyContaining(typeof(RegisterUserCommandValidation)));
 
             services.AddHealthChecks();
             services.AddTransient<INotificationService, NotificationService>();
