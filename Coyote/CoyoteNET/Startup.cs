@@ -35,7 +35,8 @@ namespace CoyoteNET
 
         public void ConfigureServices(IServiceCollection services)
         {
-            var connectionString = Configuration.GetConnectionString("Default");
+            var connectionStringConfiguration = Environment.GetEnvironmentVariable("ConnectionStringConfiguration") ?? "Default";
+            var connectionString = Configuration.GetConnectionString(connectionStringConfiguration);
             Retry.Do(() => CheckDataBaseConnection(connectionString), TimeSpan.FromSeconds(15), 5);
             services.AddDbContext<Context>(options => options.UseSqlServer(connectionString), ServiceLifetime.Transient);
 
