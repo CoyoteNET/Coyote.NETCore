@@ -36,9 +36,9 @@ namespace CoyoteNET
         public void ConfigureServices(IServiceCollection services)
         {
             var connectionStringConfiguration = Environment.GetEnvironmentVariable("ConnectionStringConfiguration") ?? "Default";
-            var connectionString = Configuration.GetConnectionString(connectionStringConfiguration);
-            Retry.Do(() => CheckDataBaseConnection(connectionString), TimeSpan.FromSeconds(15), 5);
-            services.AddDbContext<Context>(options => options.UseSqlServer(connectionString), ServiceLifetime.Transient);
+            services.AddDbContext<Context>(
+                options => options.UseSqlServer(Configuration.GetConnectionString(connectionStringConfiguration)),
+                ServiceLifetime.Transient);
 
             services.AddMediatR(typeof(RegisterUserCommand).Assembly);
             services
@@ -115,12 +115,6 @@ namespace CoyoteNET
                 endpoints.MapControllers();
                 endpoints.MapHealthChecks("/health");
             });
-        }
-        private static void CheckDataBaseConnection(string connectionString)
-        {
-            using var conn = new SqlConnection(connectionString);
-            conn.Open();
-            conn.Close();
         }
     }
 }
