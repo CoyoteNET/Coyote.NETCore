@@ -1,0 +1,21 @@
+version: '3.4'
+
+services:
+  mssql:
+    image: microsoft/mssql-server-linux:2017-latest
+    environment:
+      - SA_PASSWORD=Pass@word
+      - ACCEPT_EULA=Y
+    ports:
+      - "1433:1433"    
+    container_name: mssql
+  coyote.web:
+    image: ${DOCKER_REGISTRY-}coyoteweb
+    environment:
+      - ConnectionStringConfiguration=DockerDb
+    build:
+      context: .
+      dockerfile: CoyoteNET/Dockerfile
+    ports:
+      - "5000:80"
+    
